@@ -21,13 +21,14 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
-import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import org.jetbrains.annotations.NotNull;
+import static dk.dtu.compute.se.pisd.roborally.model.Phase.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
+import org.jetbrains.annotations.NotNull;
+
+import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 /**
  * ...
@@ -57,10 +58,13 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
+    private int stepCounter;
+
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
         this.width = width;
         this.height = height;
+        this.stepCounter = 0;
         spaces = new Space[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
@@ -150,6 +154,14 @@ public class Board extends Subject {
         }
     }
 
+    public int getStepCounter(){
+        return stepCounter;
+    }
+
+    public void setStepCounter(int counter){
+        this.stepCounter = counter;
+    }
+
     public boolean isStepMode() {
         return stepMode;
     }
@@ -213,7 +225,8 @@ public class Board extends Subject {
         //      of the current move!
         return "Phase: " + getPhase().name() +
                 ", Player = " + getCurrentPlayer().getName() +
-                ", Step: " + getStep();
+                ", Step: " + getStep() +
+                "moves: " + getStepCounter();
 
         // TODO Task1: add a counter along with a getter and a setter, so the
         //      state of the board (game) contains the number of moves, which then can

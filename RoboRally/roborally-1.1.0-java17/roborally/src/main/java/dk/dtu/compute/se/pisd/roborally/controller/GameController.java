@@ -21,8 +21,15 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 /**
  * ...
@@ -33,9 +40,11 @@ import org.jetbrains.annotations.NotNull;
 public class GameController {
 
     final public Board board;
+   
 
     public GameController(@NotNull Board board) {
         this.board = board;
+        
     }
 
     /**
@@ -53,7 +62,30 @@ public class GameController {
         //   - the counter of moves in the game should be increased by one
         //     if the player is moved
 
-    }
+        var currentPlayer = board.getCurrentPlayer();
+
+        if(space.getPlayer() == null){
+
+            if (currentPlayer.getSpace() != null){
+                currentPlayer.getSpace().setPlayer(null);
+            }
+            currentPlayer.setSpace(space);
+            space.setPlayer(currentPlayer);
+
+        }
+
+        board.setStepCounter(board.getStepCounter() + 1);
+
+        var indexOfTheCurrentPlayer = board.getPlayerNumber(currentPlayer); // index of the currentplayer
+
+        //index of the nextPlayer and the when his will wrap around to the first player if the current player is the last in the list
+        var indexOfTheNextPlayer = indexOfTheCurrentPlayer + 1 % board.getPlayersNumber(); 
+        var nextPlayer = board.getPlayer(indexOfTheNextPlayer); // nextPlayer
+        board.setCurrentPlayer(nextPlayer); // set the nextPlayer to the currentPlayer
+
+        
+    } 
+    
 
     // XXX: implemented in the current version
     public void startProgrammingPhase() {
@@ -235,5 +267,4 @@ public class GameController {
         // XXX just for now to indicate that the actual method is not yet implemented
         assert false;
     }
-
 }
