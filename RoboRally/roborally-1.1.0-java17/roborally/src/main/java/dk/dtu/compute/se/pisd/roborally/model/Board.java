@@ -227,7 +227,7 @@ public class Board extends Subject {
         return "Phase: " + getPhase().name() +
                 ", Player = " + getCurrentPlayer().getName() +
                 ", Step: " + getStep() +
-                "moves: " + getStepCounter();
+                ", moves: " + getStepCounter();
 
         // TODO Task1: add a counter along with a getter and a setter, so the
         //      state of the board (game) contains the number of moves, which then can

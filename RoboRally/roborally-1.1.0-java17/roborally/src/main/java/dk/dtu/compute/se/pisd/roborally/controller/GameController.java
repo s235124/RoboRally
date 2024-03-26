@@ -27,6 +27,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Command;
 import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -227,9 +228,20 @@ public class GameController {
         }
     }
 
-    // TODO Task2
+    /**
+     * Moves the player forward once in its current direction.
+     * 
+     * @author Mirza Zia Beg (s235124)
+     * @param player The player that is turning right
+     * @return Nothing
+     */
     public void moveForward(@NotNull Player player) {
+        var playerDir = player.getHeading();
 
+        var nextSpace = this.board.getNeighbour(player.getSpace(), playerDir);
+
+        if (nextSpace != null)
+        player.setSpace(nextSpace);
     }
 
     // TODO Task2
@@ -237,16 +249,29 @@ public class GameController {
 
     }
 
-    // TODO Task2
+    /**
+     * Turns the players direction 90 degrees clockwise.
+     * 
+     * @author Mirza Zia Beg (s235124)
+     * @param player The player that is turning right
+     * @return Nothing
+     */
     public void turnRight(@NotNull Player player) {
-
+        player.setHeading(player.getHeading().next());
     }
-
-    // TODO Task2
+    
+    /**
+     * Turns the players direction 90 degrees counter-clockwise.
+     * 
+     * @author Mirza Zia Beg (s235124)
+     * @param player The player that is turning left
+     * @return Nothing
+     */
     public void turnLeft(@NotNull Player player) {
-
+        player.setHeading(player.getHeading().prev());
+        
     }
-
+    
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();
