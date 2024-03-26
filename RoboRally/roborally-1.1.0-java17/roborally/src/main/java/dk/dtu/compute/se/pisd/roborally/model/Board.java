@@ -160,6 +160,7 @@ public class Board extends Subject {
 
     public void setStepCounter(int counter){
         this.stepCounter = counter;
+        notifyChange();
     }
 
     public boolean isStepMode() {

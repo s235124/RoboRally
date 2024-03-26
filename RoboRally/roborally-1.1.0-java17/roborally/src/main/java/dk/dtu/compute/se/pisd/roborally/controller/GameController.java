@@ -79,7 +79,7 @@ public class GameController {
         var indexOfTheCurrentPlayer = board.getPlayerNumber(currentPlayer); // index of the currentplayer
 
         //index of the nextPlayer and the when his will wrap around to the first player if the current player is the last in the list
-        var indexOfTheNextPlayer = indexOfTheCurrentPlayer + 1 % board.getPlayersNumber(); 
+        var indexOfTheNextPlayer = (indexOfTheCurrentPlayer + 1) % board.getPlayersNumber(); 
         var nextPlayer = board.getPlayer(indexOfTheNextPlayer); // nextPlayer
         board.setCurrentPlayer(nextPlayer); // set the nextPlayer to the currentPlayer
 
