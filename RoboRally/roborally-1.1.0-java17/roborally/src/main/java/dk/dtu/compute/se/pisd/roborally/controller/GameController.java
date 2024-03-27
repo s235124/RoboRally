@@ -246,7 +246,8 @@ public class GameController {
 
     // TODO Task2
     public void fastForward(@NotNull Player player) {
-
+        moveForward(player);
+        moveForward(player);
     }
 
     /**
