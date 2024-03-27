@@ -49,10 +49,11 @@ public class GameController {
     }
 
     /**
-     * This is just some dummy controller operation to make a simple move to see something
-     * happening on the board. This method should eventually be deleted!
-     *
+     * this method makes players to move to another space and increament the number of moves in the gameboard.
+     * 
+     * @author sakariye abdulqaadir (s235100)
      * @param space the space to which the current player should move
+     * @return Nothing
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space)  {
         // TODO Task1: method should be implemented by the students:
@@ -65,17 +66,17 @@ public class GameController {
 
         var currentPlayer = board.getCurrentPlayer();
 
-        if(space.getPlayer() == null){
+        if(space.getPlayer() == null){ // CHECKING IF THE SPACE IS EMPTY
 
             if (currentPlayer.getSpace() != null){
-                currentPlayer.getSpace().setPlayer(null);
+                currentPlayer.getSpace().setPlayer(null);// REST THE OLD SPACE FROM THE PLAYER
             }
             currentPlayer.setSpace(space);
             space.setPlayer(currentPlayer);
 
         }
 
-        board.setStepCounter(board.getStepCounter() + 1);
+        board.setStepCounter(board.getStepCounter() + 1); // INCREAMENT THE NUMBER OF MOVES IN THE BOARD.
 
         var indexOfTheCurrentPlayer = board.getPlayerNumber(currentPlayer); // index of the currentplayer
 
