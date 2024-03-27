@@ -154,9 +154,22 @@ public class Board extends Subject {
         }
     }
 
+    /**
+       @author sakariye abdulqaadir (s235100)
+     * @param  Nothing the space to which the current player should move
+     * @return stepCounter
+     * */
+
     public int getStepCounter(){
         return stepCounter;
     }
+
+    /**
+       @author sakariye abdulqaadir (s235100)
+     * @param  counter the space to which the current player should move
+     * @return Nothing
+     * */
+    
 
     public void setStepCounter(int counter){
         this.stepCounter = counter;
