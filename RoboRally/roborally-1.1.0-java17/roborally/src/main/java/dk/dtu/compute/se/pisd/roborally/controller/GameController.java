@@ -64,17 +64,17 @@ public class GameController {
 
         var currentPlayer = board.getCurrentPlayer();
 
-        if(space.getPlayer() == null){
+        if(space.getPlayer() == null){ // CHECKING IF THE SPACE IS EMPTY
 
             if (currentPlayer.getSpace() != null){
-                currentPlayer.getSpace().setPlayer(null);
+                currentPlayer.getSpace().setPlayer(null);// REST THE OLD SPACE FROM THE PLAYER
             }
             currentPlayer.setSpace(space);
             space.setPlayer(currentPlayer);
 
         }
 
-        board.setStepCounter(board.getStepCounter() + 1);
+        board.setStepCounter(board.getStepCounter() + 1); // INCREAMENT THE NUMBER OF MOVES IN THE BOARD.
 
         var indexOfTheCurrentPlayer = board.getPlayerNumber(currentPlayer); // index of the currentplayer
 
