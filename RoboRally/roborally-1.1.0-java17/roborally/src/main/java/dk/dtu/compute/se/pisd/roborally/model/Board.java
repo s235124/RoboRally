@@ -155,8 +155,10 @@ public class Board extends Subject {
     }
 
     /**
-       @author sakariye abdulqaadir (s235100)
-     * @param  Nothing the space to which the current player should move
+     * this is a get method for stepCounter for stepCounter variable.
+     * 
+     * @author sakariye abdulqaadir (s235100)
+     * @param  Nothing.
      * @return stepCounter
      * */
 
@@ -165,8 +167,10 @@ public class Board extends Subject {
     }
 
     /**
-       @author sakariye abdulqaadir (s235100)
-     * @param  counter the space to which the current player should move
+     * this is a set metode for stepCounter variable
+     *
+     * @author sakariye abdulqaadir (s235100)
+     * @param  counter which counts the number of moves in the board.
      * @return Nothing
      * */
     
@@ -226,26 +230,20 @@ public class Board extends Subject {
         return getSpace(x, y);
     }
 
-    public String getStatusMessage() {
-        // This is actually a view aspect, but for making the first task easy for
-        // the students, this method gives a string representation of the current
-        // status of the game (specifically, it shows the phase, the player and the step)
+    /**
+     * this is a set metode for stepCounter variable
+     *
+     * @author sakariye abdulqaadir (s235100)
+     * @param  Nothing.
+     * @return a string.
+     * */
 
-        // TODO Task1: this string could eventually be refined
-        //      The status line should show more information based on
-        //      situation; for now, introduce a counter to the Board,
-        //      which is counted up every time a player makes a move; the
-        //      status line should show the current player and the number
-        //      of the current move!
+    public String getStatusMessage() {
+    
         return "Phase: " + getPhase().name() +
                 ", Player = " + getCurrentPlayer().getName() +
                 ", Step: " + getStep() +
                 "moves: " + getStepCounter();
 
-        // TODO Task1: add a counter along with a getter and a setter, so the
-        //      state of the board (game) contains the number of moves, which then can
-        //      be used to extend the status message 
     }
-
-
 }
