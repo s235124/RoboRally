@@ -27,10 +27,15 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.io.InputStream;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -74,20 +79,21 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     private void updatePlayer() {
         this.getChildren().clear();
-
+    
         Player player = space.getPlayer();
         if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0 );
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
 
-            arrow.setRotate((90*player.getHeading().ordinal())%360);
-            this.getChildren().add(arrow);
+            String iconName = player.getColor().equals("red") ? "redRobot.png" : "greenRobot.png";
+            InputStream is = getClass().getClassLoader().getResourceAsStream("icons/" + iconName);
+            if (is == null) {
+                System.err.println("Ikke i stand til at finde ikon: " + iconName);
+                return;
+            }
+            Image icon = new Image(is);
+            ImageView imageView = new ImageView(icon);
+            imageView.setFitWidth(SPACE_WIDTH); // Juster størrelsen efter behovv
+            imageView.setFitHeight(SPACE_HEIGHT); // og sammen her
+            this.getChildren().add(imageView);
         }
     }
 
