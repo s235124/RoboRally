@@ -77,6 +77,13 @@ public class SpaceView extends StackPane implements ViewObserver {
         update(space);
     }
 
+    /**
+     * This section makes sure the players will have a robot as their figure
+     * 
+     * @author Melih Kelkitli (s235114)
+     * 
+     */
+    
     private void updatePlayer() {
         this.getChildren().clear();
     
