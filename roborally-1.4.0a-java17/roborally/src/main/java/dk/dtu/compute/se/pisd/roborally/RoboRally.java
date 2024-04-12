@@ -29,7 +29,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 /**
  * ...
@@ -86,6 +89,14 @@ public class RoboRally extends Application {
         }
 
         stage.sizeToScene();
+    }
+
+    public File saveMenu (FileChooser fileChooser) {
+        return fileChooser.showSaveDialog(stage);
+    }
+
+    public File loadMenu (FileChooser fileChooser) {
+        return fileChooser.showOpenDialog(stage);
     }
 
     @Override

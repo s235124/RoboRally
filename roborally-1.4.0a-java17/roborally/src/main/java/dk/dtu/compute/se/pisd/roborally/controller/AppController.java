@@ -34,8 +34,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -94,15 +100,30 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
-        // XXX needs to be implemented eventually
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save game");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        fileChooser.setInitialDirectory(new File("..").getAbsoluteFile());
+
+        File file = roboRally.saveMenu(fileChooser);
+        if (file == null || !file.exists()) return; // Saving cancelled
+
+        String json = gameController.boardToJSON();
+        System.out.println(json);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()))) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadGame() {
-        // XXX needs to be implemented eventually
-        // for now, we just create a new game
-        if (gameController == null) {
-            newGame();
-        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load game");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        fileChooser.setInitialDirectory(new File("..").getAbsoluteFile());
+        File file = roboRally.loadMenu(fileChooser);
+
     }
 
     /**
@@ -118,7 +139,7 @@ public class AppController implements Observer {
         if (gameController != null) {
 
             // here we save the game (without asking the user).
-            saveGame();
+            //saveGame();
 
             gameController = null;
             roboRally.createBoardView(null);

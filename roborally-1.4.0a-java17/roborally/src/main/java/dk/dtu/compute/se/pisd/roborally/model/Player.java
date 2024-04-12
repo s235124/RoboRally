@@ -66,6 +66,10 @@ public class Player extends Subject {
         }
     }
 
+    public Player() {
+        this.board = null;
+    }
+
     public String getName() {
         return name;
     }
