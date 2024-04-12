@@ -21,13 +21,14 @@
  */
 package dk.dtu.compute.se.pisd.roborally.model;
 
-import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import org.jetbrains.annotations.NotNull;
+import static dk.dtu.compute.se.pisd.roborally.model.Phase.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
+import org.jetbrains.annotations.NotNull;
+
+import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 /**
  * ...
@@ -54,6 +55,8 @@ public class Board extends Subject {
     private int step = 0;
 
     private boolean stepMode;
+
+    private int stepCounter;
 
     public Board(int width, int height) {
         this.width = width;
@@ -143,6 +146,14 @@ public class Board extends Subject {
         }
     }
 
+    public int getStepCounter(){
+        return stepCounter;
+    }
+
+    public void setStepCounter(){
+        stepCounter++;
+    }
+
     public boolean isStepMode() {
         return stepMode;
     }
@@ -212,6 +223,9 @@ public class Board extends Subject {
 
     public String getStatusMessage() {
 
-        return "";
+        return "Phase: " + getPhase().name() +
+                ", Player = " + getCurrentPlayer().getName() +
+                ", Step: " + getStep() +
+                ", moves: " + getStepCounter();
     }
 }
