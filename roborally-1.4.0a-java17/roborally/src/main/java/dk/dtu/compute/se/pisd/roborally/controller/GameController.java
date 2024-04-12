@@ -21,8 +21,16 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
 
 /**
  * ...
@@ -58,19 +66,33 @@ public class GameController {
         }
     }
 
-    // TODO Assignment A3
+   // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
-
-    }
+        
+        moveForward(player);
+        moveForward(player);
+    
+}
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        player.setHeading(heading.next());
 
     }
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
 
+        Heading heading = player.getHeading();
+        player.setHeading(heading.prev());
+
+    }
+
+    public void turnLeftOrTurnRight(Player player){
+        Heading heading = player.getHeading();
+
+        
     }
 
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
