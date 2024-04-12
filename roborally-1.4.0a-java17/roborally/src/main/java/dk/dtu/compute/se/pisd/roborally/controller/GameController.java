@@ -26,6 +26,15 @@ import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
+
 /**
  * ...
  *
@@ -64,12 +73,12 @@ public class GameController {
         moveForward(player);
         moveForward(player);
 
-    }
+}
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
-        player.setHeading(heading.prev());
+        player.setHeading(heading.next());
 
     }
 
@@ -77,13 +86,18 @@ public class GameController {
     public void turnLeft(@NotNull Player player) {
 
         Heading heading = player.getHeading();
-        player.setHeading(heading.next());
+        player.setHeading(heading.prev());
 
     }
 
+    public void turnLeftOrTurnRight(Player player){
+        Heading heading = player.getHeading();
+
+
+    }
 
     //U-Turn
-       private void uTurn(@NotNull Player player) {
+    private void uTurn(@NotNull Player player) {
         Heading currentHeading = player.getHeading();
         player.setHeading(currentHeading.next().next());
     }
