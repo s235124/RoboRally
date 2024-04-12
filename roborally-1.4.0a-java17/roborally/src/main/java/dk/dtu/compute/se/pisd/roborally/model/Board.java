@@ -161,6 +161,14 @@ public class Board extends Subject {
         }
     }
 
+    public int getStepCounter(){
+        return stepCounter;
+    }
+
+    public void setStepCounter(){
+        stepCounter++;
+    }
+
     public boolean isStepMode() {
         return stepMode;
     }
@@ -234,6 +242,9 @@ public class Board extends Subject {
 
     public String getStatusMessage() {
 
-        return "";
+        return "Phase: " + getPhase().name() +
+                ", Player = " + getCurrentPlayer().getName() +
+                ", Step: " + getStep() +
+                ", moves: " + getStepCounter();
     }
 }
