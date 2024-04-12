@@ -67,18 +67,18 @@ public class GameController {
         }
     }
 
-    // TODO Assignment A3
+   // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
-
+        
         moveForward(player);
         moveForward(player);
-
+    
 }
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
-        player.setHeading(heading.next());
+        player.setHeading(heading.prev());
 
     }
 
@@ -86,14 +86,14 @@ public class GameController {
     public void turnLeft(@NotNull Player player) {
 
         Heading heading = player.getHeading();
-        player.setHeading(heading.prev());
+        player.setHeading(heading.next());
 
     }
 
     public void turnLeftOrTurnRight(Player player){
         Heading heading = player.getHeading();
 
-
+        
     }
 
     //U-Turn
@@ -224,9 +224,11 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
-                    case U_TURN:
-                    this.uTurn(player);
+                case OPTION_LEFT_RIGHT:
+                    this.turnLeftOrTurnRight(player);
                     break;
+                case U_TURN:
+                    this.uTurn(player);
                 default:
                     // DO NOTHING (for now)
             }
