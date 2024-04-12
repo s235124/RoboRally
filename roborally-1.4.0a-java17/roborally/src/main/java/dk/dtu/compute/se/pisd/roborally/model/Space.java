@@ -45,6 +45,7 @@ public class Space extends Subject {
     public final int x;
     public final int y;
 
+
     public Space(Board board, int x, int y) {
         this.board = board;
         this.x = x;
@@ -85,6 +86,22 @@ public class Space extends Subject {
         // also need to update when some player attributes change, the player can
         // notify the space of these changes by calling this method.
         notifyChange();
+    }
+
+    /**
+     *
+     * @author Melih Kelkitli, s235114
+     *
+     */
+    public void addWall(Heading wallDirection) {
+        if (!walls.contains(wallDirection)) {
+            walls.add(wallDirection);
+            notifyChange(); // Notificer ændringer for at opdatere visninger
+        }
+    }
+
+    public boolean hasWall(Heading wallDirection) {
+        return walls.contains(wallDirection);
     }
 
 }

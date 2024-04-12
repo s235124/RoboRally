@@ -36,9 +36,20 @@ public class GameController {
 
     public GameController(Board board) {
         this.board = board;
+        initializeGame();
     }
 
-
+    /**
+     *
+     * @author Melih Kelkitli, s235114
+     *
+     */
+    private void initializeGame() {
+        //Tilføjer en vandret væg fra
+        board.addWallToSpace(2, 5, Heading.SOUTH);
+        board.addWallToSpace(1, 5, Heading.SOUTH);
+        board.addWallToSpace(3, 5, Heading.SOUTH);
+    }
 
     public void moveForward(@NotNull Player player) {
         if (player.board == board) {
@@ -46,13 +57,12 @@ public class GameController {
             Heading heading = player.getHeading();
 
             Space target = board.getNeighbour(space, heading);
-            if (target != null) {
+            if (target != null && !space.hasWall(heading)) { // Tjek for væg i spillerens bevægelsesretning
                 try {
                     moveToSpace(player, target, heading);
                 } catch (ImpossibleMoveException e) {
-                    // we don't do anything here  for now; we just catch the
-                    // exception so that we do no pass it on to the caller
-                    // (which would be very bad style).
+                    // Vi håndterer ikke exceptionen her; vi fanger den blot for at undgå videregivelse
+                    // Dette kunne logges eller håndteres på en brugervenlig måde
                 }
             }
         }

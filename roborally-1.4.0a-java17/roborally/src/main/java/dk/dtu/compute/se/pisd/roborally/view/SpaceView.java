@@ -29,9 +29,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * ...
@@ -70,6 +73,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         // This space view should listen to changes of the space
         space.attach(this);
         update(space);
+        drawWalls(); // Tilføj dette kald for at tegne væggene ved initialisering
     }
 
     private void updatePlayer() {
@@ -94,7 +98,52 @@ public class SpaceView extends StackPane implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
-            updatePlayer();
+            this.getChildren().clear(); // Fjerner gamle børneelementer før opdatering
+            drawWalls(); // Tegner væggene først
+            updatePlayer(); // Derefter opdaterer vi spilleren
+        }
+    }
+
+    /**
+     *
+     * @author Melih Kelkitli, s235114
+     *
+     */
+    private void drawWalls() {
+        // Vi antager, at væggene repræsenteres som en liste af Heading objekter i space objektet.
+        List<Heading> walls = space.getWalls();
+
+        for (Heading wall : walls) {
+            Line line = new Line();
+            switch (wall) {
+                case NORTH:
+                    line.setStartX(0);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setStartY(0);
+                    line.setEndY(0);
+                    break;
+                case SOUTH:
+                    line.setStartX(0);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setStartY(SPACE_HEIGHT);
+                    line.setEndY(SPACE_HEIGHT);
+                    break;
+                case EAST:
+                    line.setStartX(SPACE_WIDTH);
+                    line.setEndX(SPACE_WIDTH);
+                    line.setStartY(0);
+                    line.setEndY(SPACE_HEIGHT);
+                    break;
+                case WEST:
+                    line.setStartX(0);
+                    line.setEndX(0);
+                    line.setStartY(0);
+                    line.setEndY(SPACE_HEIGHT);
+                    break;
+            }
+            line.setStroke(Color.RED); // Vælg en passende farve for væggen
+            line.setStrokeWidth(5); //Vælg en passende tykkelse for væggen
+            this.getChildren().add(line);
         }
     }
 

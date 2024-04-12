@@ -163,6 +163,17 @@ public class Board extends Subject {
     }
 
     /**
+     *
+     * @author Melih Kelkitli, s235114
+     *
+     */
+    public void addWallToSpace(int x, int y, Heading direction) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            spaces[x][y].addWall(direction);
+        }
+    }
+
+    /**
      * Returns the neighbour of the given space of the board in the given heading.
      * The neighbour is returned only, if it can be reached from the given space
      * (no walls or obstacles in either of the involved spaces); otherwise,
