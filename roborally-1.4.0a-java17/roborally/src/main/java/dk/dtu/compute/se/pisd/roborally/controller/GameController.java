@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dk.dtu.compute.se.pisd.roborally.adapters.BoardAdapter;
 import dk.dtu.compute.se.pisd.roborally.adapters.PlayerAdapter;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +43,10 @@ public class GameController {
     }
 
     public String boardToJSON () {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Player.class, new PlayerAdapter()).setPrettyPrinting().serializeNulls().create();
-        String json = "";
+        Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).registerTypeAdapter(Player.class, new PlayerAdapter()).setPrettyPrinting().serializeNulls().create();
+        String json = gson.toJson(board) + "\n";
         for (int i = 0; i < board.getPlayersNumber(); i++) {
-            json += gson.toJson(board.getPlayer(i));
+            json += gson.toJson(board.getPlayer(i)) + "\n";
         }
         return json;
     }
