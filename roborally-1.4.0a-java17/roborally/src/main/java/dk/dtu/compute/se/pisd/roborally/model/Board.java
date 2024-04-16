@@ -68,6 +68,18 @@ public class Board extends Subject {
         this.stepMode = false;
     }
 
+    public void setPlayers(List<Player> players) {
+        //this.players.clear();
+        for (Player player : players) {
+            Player newPlayer = new Player(this, player.getColor(), player.getName());
+            newPlayer.setHeading(player.getHeading());
+            newPlayer.setSpace(new Space(this, player.getSpace().x, player.getSpace().y));
+            newPlayer.setCardFields(player.getCards());
+            newPlayer.setProgramCards(player.getProgramFields());
+            this.players.add(newPlayer);
+        }
+    }
+
     public Integer getGameId() {
         return gameId;
     }
@@ -89,6 +101,10 @@ public class Board extends Subject {
         } else {
             return null;
         }
+    }
+
+    public void setSpace (int x, int y, Space space) {
+        spaces[x][y] = space;
     }
 
     public int getPlayersNumber() {
@@ -208,6 +224,10 @@ public class Board extends Subject {
             }
         }
         return result;
+    }
+
+    public String toString () {
+        return width + "," + height + ", current player is " + current.getName() + ", gameId=" + gameId + ", phase=" + phase + ", step=" + step + ", stepMode=" + stepMode;
     }
 
     public String getStatusMessage() {

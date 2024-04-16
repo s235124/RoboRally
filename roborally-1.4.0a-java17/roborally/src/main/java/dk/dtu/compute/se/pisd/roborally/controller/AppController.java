@@ -21,11 +21,14 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.adapters.BoardAdapter;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -35,13 +38,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +122,17 @@ public class AppController implements Observer {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
         fileChooser.setInitialDirectory(new File("..").getAbsoluteFile());
         File file = roboRally.loadMenu(fileChooser);
+        if (file == null || !file.exists()) return; // Loading cancelled
 
+        try {
+            Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).setPrettyPrinting().serializeNulls().create();
+            Board board = gson.fromJson(new FileReader(file), Board.class);
+            this.gameController = new GameController(board);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        roboRally.createBoardView(this.gameController);
     }
 
     /**

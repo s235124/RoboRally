@@ -42,5 +42,9 @@ public class CommandCard extends Subject {
         return command.displayName;
     }
 
+    public String commandAsString () {
+        return command.toString();
+    }
+
 
 }

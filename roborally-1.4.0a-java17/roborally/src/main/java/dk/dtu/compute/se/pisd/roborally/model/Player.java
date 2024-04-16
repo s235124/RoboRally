@@ -133,8 +133,30 @@ public class Player extends Subject {
         return program[i];
     }
 
+    public CommandCardField[] getProgramFields() {
+        return program;
+    }
+
+    public void setProgramCards(CommandCardField[] program) {
+        for (int i = 0; i < program.length; i++)
+            this.program[i] = program[i];
+    }
+
     public CommandCardField getCardField(int i) {
         return cards[i];
     }
 
+    public CommandCardField[] getCards() {
+        return cards;
+    }
+
+    public void setCardFields(CommandCardField[] cards) {
+        for (int i = 0; i < cards.length; i++)
+            this.cards = cards;
+    }
+
+    @Override
+    public String toString() {
+        return name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
+    }
 }

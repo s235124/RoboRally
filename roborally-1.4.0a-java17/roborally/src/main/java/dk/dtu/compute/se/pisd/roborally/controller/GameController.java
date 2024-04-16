@@ -24,9 +24,12 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.roborally.adapters.BoardAdapter;
-import dk.dtu.compute.se.pisd.roborally.adapters.PlayerAdapter;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * ...
@@ -43,12 +46,15 @@ public class GameController {
     }
 
     public String boardToJSON () {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).registerTypeAdapter(Player.class, new PlayerAdapter()).setPrettyPrinting().serializeNulls().create();
-        String json = gson.toJson(board) + "\n";
-        for (int i = 0; i < board.getPlayersNumber(); i++) {
-            json += gson.toJson(board.getPlayer(i)) + "\n";
-        }
+        Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).setPrettyPrinting().serializeNulls().create();
+        String json = gson.toJson(board);
         return json;
+    }
+
+    public Board fromJSON (File file) throws IOException {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).setPrettyPrinting().serializeNulls().create();
+        Board board = gson.fromJson(new FileReader(file), Board.class);
+        return board;
     }
 
     public void moveForward(@NotNull Player player) {

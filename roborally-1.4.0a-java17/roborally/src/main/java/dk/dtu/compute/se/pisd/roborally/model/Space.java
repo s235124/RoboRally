@@ -87,4 +87,8 @@ public class Space extends Subject {
         notifyChange();
     }
 
+    public String toString() {
+        return player == null ? "No player on space (" + x + "," + y + ")" : player.getName() + ", (" + x + "," + y + ")";
+    }
+
 }
