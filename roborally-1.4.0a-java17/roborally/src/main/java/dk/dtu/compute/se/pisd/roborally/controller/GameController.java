@@ -51,12 +51,6 @@ public class GameController {
         return json;
     }
 
-    public Board fromJSON (File file) throws IOException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).setPrettyPrinting().serializeNulls().create();
-        Board board = gson.fromJson(new FileReader(file), Board.class);
-        return board;
-    }
-
     public void moveForward(@NotNull Player player) {
         if (player.board == board) {
             Space space = player.getSpace();

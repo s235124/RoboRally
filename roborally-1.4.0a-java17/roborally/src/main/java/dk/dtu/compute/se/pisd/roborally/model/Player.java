@@ -139,7 +139,7 @@ public class Player extends Subject {
 
     public void setProgramCards(CommandCardField[] program) {
         for (int i = 0; i < program.length; i++)
-            this.program[i] = program[i];
+            this.program[i].setCard(program[i].getCard());
     }
 
     public CommandCardField getCardField(int i) {
@@ -152,11 +152,11 @@ public class Player extends Subject {
 
     public void setCardFields(CommandCardField[] cards) {
         for (int i = 0; i < cards.length; i++)
-            this.cards = cards;
+            this.cards[i].setCard(cards[i].getCard());
     }
 
     @Override
     public String toString() {
-        return name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
+        return board.toString() + "; " + name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
     }
 }

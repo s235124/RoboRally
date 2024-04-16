@@ -69,7 +69,6 @@ public class Board extends Subject {
     }
 
     public void setPlayers(List<Player> players) {
-        //this.players.clear();
         for (Player player : players) {
             Player newPlayer = new Player(this, player.getColor(), player.getName());
             newPlayer.setHeading(player.getHeading());
@@ -77,6 +76,7 @@ public class Board extends Subject {
             newPlayer.setCardFields(player.getCards());
             newPlayer.setProgramCards(player.getProgramFields());
             this.players.add(newPlayer);
+            //System.out.println(this.players.get(players.size() - 1).toString());
         }
     }
 
@@ -227,7 +227,7 @@ public class Board extends Subject {
     }
 
     public String toString () {
-        return width + "," + height + ", current player is " + current.getName() + ", gameId=" + gameId + ", phase=" + phase + ", step=" + step + ", stepMode=" + stepMode;
+        return width + ", " + height + ", current player is " + current.getName() + ", gameId=" + gameId + ", phase=" + phase + ", step=" + step + ", stepMode=" + stepMode;
     }
 
     public String getStatusMessage() {
