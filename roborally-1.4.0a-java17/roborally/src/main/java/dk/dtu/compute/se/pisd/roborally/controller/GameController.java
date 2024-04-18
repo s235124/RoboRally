@@ -73,6 +73,12 @@ public class GameController {
 
     }
 
+       //U-Turn
+       private void uTurn(@NotNull Player player) {
+        Heading currentHeading = player.getHeading();
+        player.setHeading(currentHeading.next().next());
+    }
+
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
         Player other = space.getPlayer();
@@ -194,6 +200,9 @@ public class GameController {
                     break;
                 case FAST_FORWARD:
                     this.fastForward(player);
+                    break;
+                    case U_TURN:
+                    this.uTurn(player);
                     break;
                 default:
                     // DO NOTHING (for now)
