@@ -38,12 +38,16 @@ public enum Command {
     FORWARD("Fwd"),
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
-    FAST_FORWARD("Fast Fwd");
+    FAST_FORWARD("Fast Fwd"),
+    U_TURN("U turn");
 
     final public String displayName;
+
+
 
     Command(String displayName) {
         this.displayName = displayName;
     }
+
 
 }

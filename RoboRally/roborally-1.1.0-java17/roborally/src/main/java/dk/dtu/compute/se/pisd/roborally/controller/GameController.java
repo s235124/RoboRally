@@ -189,6 +189,9 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
+                case U_TURN:  // Assuming you have added U_TURN to the Command enum
+                    this.uTurn(player); // You should implement this method
+                     break;
                 default:
                     // DO NOTHING (for now)
             }
@@ -213,6 +216,12 @@ public class GameController {
     // TODO Task2
     public void turnLeft(@NotNull Player player) {
 
+    }
+
+    //U-Turn
+    private void uTurn(@NotNull Player player) {
+        Heading currentHeading = player.getHeading();
+        player.setHeading(currentHeading.next().next());
     }
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
