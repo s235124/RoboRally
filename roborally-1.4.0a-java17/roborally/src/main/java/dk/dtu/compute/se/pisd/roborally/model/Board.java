@@ -76,7 +76,6 @@ public class Board extends Subject {
             newPlayer.setCardFields(player.getCards());
             newPlayer.setProgramCards(player.getProgramFields());
             this.players.add(newPlayer);
-            //System.out.println(this.players.get(players.size() - 1).toString());
         }
     }
 
