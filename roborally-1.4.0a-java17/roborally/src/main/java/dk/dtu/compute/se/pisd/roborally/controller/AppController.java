@@ -21,15 +21,11 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
-import dk.dtu.compute.se.pisd.roborally.adapters.BoardAdapter;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoardPlayer;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
@@ -39,10 +35,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -101,8 +97,10 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
+        String fileName = roboRally.saveMenu();
 
-        LoadBoardPlayer.saveBoardPlayer(gameController.board, "test");
+        if (!fileName.isEmpty())
+            LoadBoardPlayer.saveBoardPlayer(gameController.board, fileName);
 
         /*      Method of saving using custom adapter:
 
@@ -124,8 +122,49 @@ public class AppController implements Observer {
  */
     }
 
+    /**
+     * Loads a previously saved game.
+     * The game has to be one that was saved from a prior game, otherwise bad stuff happens.
+     * @author Mirza Zia Beg (s235124)
+     */
     public void loadGame() {
-        this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer("test"));
+        ClassLoader classLoader = LoadBoardPlayer.class.getClassLoader();
+
+        String path = classLoader.getResource("boards").getPath();
+
+        StringBuilder actualPath = new StringBuilder();
+
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+            if (c == '%') {
+                i += 2;
+                c = ' ';
+            }
+            actualPath.append(c);
+        }
+
+        File directory = new File(actualPath.toString());
+        File[] files = directory.listFiles();
+        List<String> fileNames = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    int dotIndex = fileName.lastIndexOf('.');
+                    if (dotIndex > 0) {
+                        fileName = fileName.substring(0, dotIndex);
+                    }
+                    fileNames.add(fileName);
+                }
+            }
+        }
+
+        System.out.println("File names: " + fileNames);
+
+        String boardName = roboRally.loadMenu(fileNames);
+        if (boardName != null)
+            this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer(boardName));
 
         /* Method of loading using the json file made in the custom save method:
 
