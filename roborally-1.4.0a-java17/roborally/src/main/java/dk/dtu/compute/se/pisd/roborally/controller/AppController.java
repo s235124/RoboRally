@@ -30,6 +30,7 @@ import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.adapters.BoardAdapter;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoardPlayer;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -100,6 +101,11 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
+
+        LoadBoardPlayer.saveBoardPlayer(gameController.board, "test");
+
+        /*      Method of saving using custom adapter:
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save game");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
@@ -115,9 +121,14 @@ public class AppController implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+ */
     }
 
     public void loadGame() {
+        this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer("test"));
+
+        /* Method of loading using the json file made in the custom save method:
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load game");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
@@ -132,9 +143,9 @@ public class AppController implements Observer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        */
 
         roboRally.createBoardView(this.gameController);
-
     }
 
     /**
