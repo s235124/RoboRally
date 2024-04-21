@@ -220,6 +220,9 @@ public class GameController {
                 case OPTION_LEFT_RIGHT:
                     this.turnLeftOrTurnRight(player);
                     break;
+                case SHOOT:
+                    board.laserBeam(player);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }
