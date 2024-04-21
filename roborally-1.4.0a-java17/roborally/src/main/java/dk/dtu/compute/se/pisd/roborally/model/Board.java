@@ -118,6 +118,7 @@ public void laserBeam(Player shooter){
             Heading heading = v.getHeading();
             v.setHeading(heading.next().next());
             System.out.println("ve");
+            //animation for later
             //Platform.runLater(() -> {
                 //LaserBeam laserBeam = new LaserBeam(shooter.getSpace().x*60, shooter.getSpace().y+60, v.getSpace().x*60, v.getSpace().y+60);
                 // Add the laser beam to
