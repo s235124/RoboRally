@@ -93,7 +93,44 @@ public class Board extends Subject {
             return null;
         }
     }
+    public Player iterateSpace(Player shooter){
+            int x = shooter.getSpace().x;
 
+            for (int i = 0;i<height;i++){
+                if(spaces[x][i].containsRobot() && spaces[x][i].getPlayer() != shooter){
+                    return spaces[x][i].getPlayer();
+                }
+            }
+            return null;
+        }
+    
+
+public void laserBeam(Player shooter){
+
+        Player v = iterateSpace(shooter);
+        if(v == null){
+            System.out.println("v");
+            return;
+        }
+        System.out.println("v's y coord is "+ v.getSpace().y);
+
+        if(shooter.getHeading() == Heading.SOUTH && shooter.getSpace().y < v.getSpace().y){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("ve");
+            //Platform.runLater(() -> {
+                //LaserBeam laserBeam = new LaserBeam(shooter.getSpace().x*60, shooter.getSpace().y+60, v.getSpace().x*60, v.getSpace().y+60);
+                // Add the laser beam to
+                //mainBoardPane.getChildren().add(laserBeam);
+                //laserBeam.animate();
+            //});
+        }else if(shooter.getHeading() == Heading.NORTH && shooter.getSpace().y > v.getSpace().y){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("vee");
+        }
+    }
+    
     public int getPlayersNumber() {
         return players.size();
     }

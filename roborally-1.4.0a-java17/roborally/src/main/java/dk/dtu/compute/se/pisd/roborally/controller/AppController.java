@@ -81,7 +81,7 @@ public class AppController implements Observer {
             List<String> selectedColors = new ArrayList<>();
             int no = result.get();
             for (int i = 0; i < no; i++) {
-
+                //v
                 List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
                 remainingColors.removeAll(selectedColors);
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
