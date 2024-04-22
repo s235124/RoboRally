@@ -6,3 +6,6 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+#User
+/roborally-1.4.0a-java17/roborally/target/
+
