@@ -21,6 +21,8 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,8 +39,6 @@ public class GameController {
     public GameController(Board board) {
         this.board = board;
     }
-
-
 
     public void moveForward(@NotNull Player player) {
         if (player.board == board) {
