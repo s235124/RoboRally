@@ -21,7 +21,12 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import java.util.Optional;
+
 import org.jetbrains.annotations.NotNull;
+
+import javafx.scene.control.ButtonBar;
+
 
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Command;
@@ -31,6 +36,12 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+
+
 
 /**
  * ...
@@ -89,11 +100,36 @@ public class GameController {
 
     }
 
-    public void turnLeftOrTurnRight(Player player){
-        Heading heading = player.getHeading();
+    //public void turnLeftOrTurnRight(Player player){
+      //  Heading heading = player.getHeading();
 
         
-    }
+   // }
+
+   public void turnLeftOrTurnRight(Player player) {
+    Platform.runLater(() -> {
+        // Create a dialog window with options
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Choose Direction");
+        alert.setHeaderText("Choose which way to turn");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonLeft = new ButtonType("Turn Left");
+        ButtonType buttonRight = new ButtonType("Turn Right");
+        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonLeft) {
+            turnLeft(player);
+        } else if (result.isPresent() && result.get() == buttonRight) {
+            turnRight(player);
+        }
+        
+    });
+}
+
 
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
