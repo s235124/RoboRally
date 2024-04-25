@@ -61,19 +61,28 @@ public class GameController {
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
 
+        moveForward(player);
+        moveForward(player);
+
     }
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        player.setHeading(heading.prev());
 
     }
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
 
+        Heading heading = player.getHeading();
+        player.setHeading(heading.next());
+
     }
 
-       //U-Turn
+
+    //U-Turn
        private void uTurn(@NotNull Player player) {
         Heading currentHeading = player.getHeading();
         player.setHeading(currentHeading.next().next());
