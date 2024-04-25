@@ -56,8 +56,9 @@ public class GameController {
             Space space = player.getSpace();
             Heading heading = player.getHeading();
 
-            Space target = board.getNeighbour(space, heading);
-            if (target != null && !space.hasWall(heading)) { // Tjek for væg i spillerens bevægelsesretning
+            Space target = board.getNeighbour(space, heading); //target er vores næste space som ønsker spilleren skal bevæge sig til
+
+            if (target != null && !target.hasWall(heading)) { // Tjek for væg i spillerens bevægelsesretning
                 try {
                     moveToSpace(player, target, heading);
                 } catch (ImpossibleMoveException e) {
