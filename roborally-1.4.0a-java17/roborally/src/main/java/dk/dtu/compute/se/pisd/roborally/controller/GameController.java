@@ -26,6 +26,24 @@ import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
 
+import javafx.scene.control.ButtonBar;
+
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
+
+
 /**
  * ...
  *
@@ -81,6 +99,36 @@ public class GameController {
 
     }
 
+    //public void turnLeftOrTurnRight(Player player){
+      //  Heading heading = player.getHeading();
+
+
+   // }
+
+   public void turnLeftOrTurnRight(Player player) {
+    Platform.runLater(() -> {
+        // Create a dialog window with options
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Choose Direction");
+        alert.setHeaderText("Choose which way to turn");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonLeft = new ButtonType("Turn Left");
+        ButtonType buttonRight = new ButtonType("Turn Right");
+        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonLeft) {
+            turnLeft(player);
+        } else if (result.isPresent() && result.get() == buttonRight) {
+            turnRight(player);
+        }
+
+    });
+}
+
 
     //U-Turn
        private void uTurn(@NotNull Player player) {
@@ -93,7 +141,7 @@ public class GameController {
             if (player.board == board) {
                 Space space = player.getSpace();
                 Heading heading = player.getHeading().next().next();
-    
+
                 Space target = board.getNeighbour(space, heading);
                 if (target != null) {
                     try {
@@ -229,7 +277,10 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
-                    case U_TURN:
+                case OPTION_LEFT_RIGHT:
+                    this.turnLeftOrTurnRight(player);
+                    break;
+                case U_TURN:
                     this.uTurn(player);
                     break;
                     case BackUp:

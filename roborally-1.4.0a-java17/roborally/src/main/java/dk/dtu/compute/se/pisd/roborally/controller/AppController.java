@@ -96,30 +96,15 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+     * Saves an ongoing game.
+     * @author Mirza Zia Beg (s235124)
+     */
     public void saveGame() {
         String fileName = roboRally.saveMenu();
 
         if (!fileName.isEmpty())
             LoadBoardPlayer.saveBoardPlayer(gameController.board, fileName);
-
-        /*      Method of saving using custom adapter:
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save game");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        fileChooser.setInitialDirectory(new File("..").getAbsoluteFile());
-
-        File file = roboRally.saveMenu(fileChooser);
-        if (file == null || !file.exists()) return; // Saving cancelled
-
-        String json = gameController.boardToJSON();
-        System.out.println(json);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()))) {
-            writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
- */
     }
 
     /**
@@ -165,24 +150,6 @@ public class AppController implements Observer {
         String boardName = roboRally.loadMenu(fileNames);
         if (boardName != null)
             this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer(boardName));
-
-        /* Method of loading using the json file made in the custom save method:
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load game");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        fileChooser.setInitialDirectory(new File("..").getAbsoluteFile());
-        File file = roboRally.loadMenu(fileChooser);
-        if (file == null || !file.exists()) return; // Loading cancelled
-
-        try {
-            Gson gson = new GsonBuilder().registerTypeAdapter(Board.class, new BoardAdapter()).setPrettyPrinting().serializeNulls().create();
-            Board board = gson.fromJson(new FileReader(file), Board.class);
-            this.gameController = new GameController(board);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        */
 
         roboRally.createBoardView(this.gameController);
     }
