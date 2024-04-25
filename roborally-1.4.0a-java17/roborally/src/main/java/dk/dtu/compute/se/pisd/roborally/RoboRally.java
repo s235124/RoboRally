@@ -26,10 +26,18 @@ import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
 import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * ...
@@ -86,6 +94,57 @@ public class RoboRally extends Application {
         }
 
         stage.sizeToScene();
+    }
+
+    /**
+     * Shows a dialogue box with a text field where the player inputs a name.
+     *
+     * @return The name written by the user, or an empty string if cancelled.
+     * @author Mirza Zia Beg (s235124) / Microsoft Copilot
+     */
+    public String saveMenu () {
+        final String[] input = {""};
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Save game");
+        dialog.setHeaderText("Saving game:");
+
+        TextField textField = new TextField();
+        dialog.getDialogPane().setContent(textField);
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                return textField.getText();
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(result -> {
+            input[0] = result;
+            System.out.println("Name: " + input[0]);
+        });
+
+        return input[0];
+    }
+
+    /**
+     * Shows a dialogue box with a list of choices.
+     *
+     * @param choices The list of choices from which the dialogue box will show its choices.
+     * @return A choice of the choices, or null if it was cancelled.
+     * @author Mirza Zia Beg (s235124)
+     */
+    public String loadMenu (List<String> choices) {
+        ChoiceDialog<String> cd = new ChoiceDialog<>(choices.get(0), choices);
+        cd.setTitle("Load game");
+        cd.setHeaderText("Loading game:");
+
+        Optional<String> result = cd.showAndWait();
+        if (result.isPresent()) {
+            return result.get();
+        }
+        return null;
     }
 
     @Override

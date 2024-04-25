@@ -21,8 +21,28 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.jetbrains.annotations.NotNull;
+
+import javafx.scene.control.ButtonBar;
+
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Command;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
+import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
+import dk.dtu.compute.se.pisd.roborally.model.Heading;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
+
 
 /**
  * ...
@@ -62,8 +82,9 @@ public class GameController {
                 try {
                     moveToSpace(player, target, heading);
                 } catch (ImpossibleMoveException e) {
-                    // Vi håndterer ikke exceptionen her; vi fanger den blot for at undgå videregivelse
-                    // Dette kunne logges eller håndteres på en brugervenlig måde
+                    // we don't do anything here  for now; we just catch the
+                    // exception so that we do no pass it on to the caller
+                    // (which would be very bad style).
                 }
             }
         }
@@ -72,17 +93,81 @@ public class GameController {
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
 
+        moveForward(player);
+        moveForward(player);
+
     }
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        player.setHeading(heading.prev());
 
     }
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
 
+        Heading heading = player.getHeading();
+        player.setHeading(heading.next());
+
     }
+
+    //public void turnLeftOrTurnRight(Player player){
+      //  Heading heading = player.getHeading();
+
+
+   // }
+
+   public void turnLeftOrTurnRight(Player player) {
+    Platform.runLater(() -> {
+        // Create a dialog window with options
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Choose Direction");
+        alert.setHeaderText("Choose which way to turn");
+        alert.setContentText("Choose your option.");
+
+        ButtonType buttonLeft = new ButtonType("Turn Left");
+        ButtonType buttonRight = new ButtonType("Turn Right");
+        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonLeft) {
+            turnLeft(player);
+        } else if (result.isPresent() && result.get() == buttonRight) {
+            turnRight(player);
+        }
+
+    });
+}
+
+
+    //U-Turn
+       private void uTurn(@NotNull Player player) {
+        Heading currentHeading = player.getHeading();
+        player.setHeading(currentHeading.next().next());
+    }
+
+    //BackUp
+        private void BackUp(@NotNull Player player){
+            if (player.board == board) {
+                Space space = player.getSpace();
+                Heading heading = player.getHeading().next().next();
+
+                Space target = board.getNeighbour(space, heading);
+                if (target != null) {
+                    try {
+                        moveToSpace(player, target, heading);
+                    } catch (ImpossibleMoveException e) {
+                        // we don't do anything here  for now; we just catch the
+                        // exception so that we do no pass it on to the caller
+                        // (which would be very bad style).
+                    }
+                }
+            }
+        }
 
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
@@ -206,6 +291,14 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
+                case OPTION_LEFT_RIGHT:
+                    this.turnLeftOrTurnRight(player);
+                    break;
+                case U_TURN:
+                    this.uTurn(player);
+                    break;
+                    case BackUp:
+                    this.BackUp(player);
                 default:
                     // DO NOTHING (for now)
             }

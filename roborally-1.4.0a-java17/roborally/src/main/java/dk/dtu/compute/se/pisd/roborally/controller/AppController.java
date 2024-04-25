@@ -26,6 +26,7 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoardPlayer;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -36,6 +37,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,16 +96,62 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+     * Saves an ongoing game.
+     * @author Mirza Zia Beg (s235124)
+     */
     public void saveGame() {
-        // XXX needs to be implemented eventually
+        String fileName = roboRally.saveMenu();
+
+        if (!fileName.isEmpty())
+            LoadBoardPlayer.saveBoardPlayer(gameController.board, fileName);
     }
 
+    /**
+     * Loads a previously saved game.
+     * The game has to be one that was saved from a prior game, otherwise bad stuff happens.
+     * @author Mirza Zia Beg (s235124)
+     */
     public void loadGame() {
-        // XXX needs to be implemented eventually
-        // for now, we just create a new game
-        if (gameController == null) {
-            newGame();
+        ClassLoader classLoader = LoadBoardPlayer.class.getClassLoader();
+
+        String path = classLoader.getResource("boards").getPath();
+
+        StringBuilder actualPath = new StringBuilder();
+
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+            if (c == '%') {
+                i += 2;
+                c = ' ';
+            }
+            actualPath.append(c);
         }
+
+        File directory = new File(actualPath.toString());
+        File[] files = directory.listFiles();
+        List<String> fileNames = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    int dotIndex = fileName.lastIndexOf('.');
+                    if (dotIndex > 0) {
+                        fileName = fileName.substring(0, dotIndex);
+                    }
+                    fileNames.add(fileName);
+                }
+            }
+        }
+
+        System.out.println("File names: " + fileNames);
+
+        String boardName = roboRally.loadMenu(fileNames);
+        if (boardName != null)
+            this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer(boardName));
+
+        roboRally.createBoardView(this.gameController);
     }
 
     /**
@@ -118,7 +167,7 @@ public class AppController implements Observer {
         if (gameController != null) {
 
             // here we save the game (without asking the user).
-            saveGame();
+            //saveGame();
 
             gameController = null;
             roboRally.createBoardView(null);

@@ -66,6 +66,10 @@ public class Player extends Subject {
         }
     }
 
+    public Player() {
+        this.board = null;
+    }
+
     public String getName() {
         return name;
     }
@@ -129,8 +133,30 @@ public class Player extends Subject {
         return program[i];
     }
 
+    public CommandCardField[] getProgramFields() {
+        return program;
+    }
+
+    public void setProgramCards(CommandCardField[] program) {
+        for (int i = 0; i < program.length; i++)
+            this.program[i].setCard(program[i].getCard());
+    }
+
     public CommandCardField getCardField(int i) {
         return cards[i];
     }
 
+    public CommandCardField[] getCards() {
+        return cards;
+    }
+
+    public void setCardFields(CommandCardField[] cards) {
+        for (int i = 0; i < cards.length; i++)
+            this.cards[i].setCard(cards[i].getCard());
+    }
+
+    @Override
+    public String toString() {
+        return board.toString() + "; " + name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
+    }
 }
