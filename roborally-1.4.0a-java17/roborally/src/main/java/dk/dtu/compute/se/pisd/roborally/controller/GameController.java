@@ -88,6 +88,25 @@ public class GameController {
         player.setHeading(currentHeading.next().next());
     }
 
+    //BackUp
+        private void BackUp(@NotNull Player player){
+            if (player.board == board) {
+                Space space = player.getSpace();
+                Heading heading = player.getHeading().next().next();
+    
+                Space target = board.getNeighbour(space, heading);
+                if (target != null) {
+                    try {
+                        moveToSpace(player, target, heading);
+                    } catch (ImpossibleMoveException e) {
+                        // we don't do anything here  for now; we just catch the
+                        // exception so that we do no pass it on to the caller
+                        // (which would be very bad style).
+                    }
+                }
+            }
+        }
+
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
         Player other = space.getPlayer();
@@ -213,6 +232,8 @@ public class GameController {
                     case U_TURN:
                     this.uTurn(player);
                     break;
+                    case BackUp:
+                    this.BackUp(player);
                 default:
                     // DO NOTHING (for now)
             }
