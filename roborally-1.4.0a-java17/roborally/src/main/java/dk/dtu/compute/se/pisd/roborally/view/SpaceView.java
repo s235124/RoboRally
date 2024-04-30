@@ -27,13 +27,16 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -62,11 +65,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
 
-        if ((space.x + space.y) % 2 == 0) {
-            this.setStyle("-fx-background-color: white;");
-        } else {
-            this.setStyle("-fx-background-color: black;");
-        }
+        this.setStyle("-fx-background-image: url('file:C:/Users/ziabe/Documents/Uniting/Sem%202/Advanced%20Programming/roborally-1.2.0a-java17/roborally-1.4.0a-java17/roborally/images/empty.png'); " +
+                "-fx-background-repeat: stretch; " +
+                "-fx-background-size: " + SPACE_WIDTH + " " + SPACE_HEIGHT + "; " +
+                "-fx-background-position: center center;");
 
         // updatePlayer();
 
@@ -81,18 +83,47 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         Player player = space.getPlayer();
         if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0 );
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
+            ImageView playerImgView = getPlayerImage(player);
 
-            arrow.setRotate((90*player.getHeading().ordinal())%360);
-            this.getChildren().add(arrow);
+//            Polygon arrow = new Polygon(0.0, 0.0,
+//                    10.0, 20.0,
+//                    20.0, 0.0 );
+//            try {
+//                arrow.setFill(Color.valueOf(player.getColor()));
+//            } catch (Exception e) {
+//                arrow.setFill(Color.MEDIUMPURPLE);
+//            }
+
+            playerImgView.setFitWidth(SPACE_WIDTH * 0.8);
+            playerImgView.setFitHeight(SPACE_HEIGHT * 0.8);
+
+            playerImgView.setRotate((90*player.getHeading().ordinal())%360);
+            this.getChildren().add(playerImgView);
         }
+    }
+
+    private ImageView getPlayerImage(Player player) {
+        // long ass way of converting a relative path to absolute because url suck :(
+        File img = new File("roborally/images/r" + player.getName().charAt(player.getName().length() - 1) + ".png");
+
+        String absName = img.getAbsolutePath();
+
+        StringBuilder realAbsName = new StringBuilder();
+
+        for (int i = 0; i < absName.length(); i++) {
+            if (absName.charAt(i) == ' ') {
+                realAbsName.append("%20");
+                continue;
+            }
+            if (absName.charAt(i) == '\\') {
+                realAbsName.append("/");
+                continue;
+            }
+            realAbsName.append(absName.charAt(i));
+        }
+
+        Image playerImg = new Image("file:" + realAbsName);
+        return new ImageView(playerImg);
     }
 
     @Override
