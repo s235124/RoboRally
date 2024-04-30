@@ -65,7 +65,26 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
 
-        this.setStyle("-fx-background-image: url('file:C:/Users/ziabe/Documents/Uniting/Sem%202/Advanced%20Programming/roborally-1.2.0a-java17/roborally-1.4.0a-java17/roborally/images/empty.png'); " +
+        File img = new File("roborally/images/empty.png");
+
+        String absName = img.getAbsolutePath();
+
+        StringBuilder realAbsName = new StringBuilder().append("file:");
+
+        for (int i = 0; i < absName.length(); i++) {
+            if (absName.charAt(i) == ' ') {
+                realAbsName.append("%20");
+                continue;
+            }
+            if (absName.charAt(i) == '\\') {
+                realAbsName.append("/");
+                continue;
+            }
+            realAbsName.append(absName.charAt(i));
+        }
+
+
+        this.setStyle("-fx-background-image: url(" + realAbsName + "); " +
                 "-fx-background-repeat: stretch; " +
                 "-fx-background-size: " + SPACE_WIDTH + " " + SPACE_HEIGHT + "; " +
                 "-fx-background-position: center center;");
