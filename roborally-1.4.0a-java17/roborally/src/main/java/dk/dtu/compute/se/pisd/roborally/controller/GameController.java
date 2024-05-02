@@ -70,18 +70,21 @@ public class GameController {
         board.addWallToSpace(1, 5, Heading.NORTH);
 //        board.addWallToSpace(1, 5, Heading.WEST);
         board.addWallToSpace(3, 5, Heading.WEST);
+
+
+        board.addHole(2,2);
     }
 
     public void moveForward(@NotNull Player player) {
         if (player.board == board) {
             Space space = player.getSpace();
             Heading heading = player.getHeading();
-
+    
             Space target = board.getNeighbour(space, heading); //target er vores næste space som ønsker spilleren skal bevæge sig til
-
+    
             if (target != null && !target.hasAnyWall()) { // Tjek for væg i spillerens bevægelsesretning
-                try {
-                    moveToSpace(player, target, heading);
+                try { moveToSpace(player, target,heading); // Flyt spilleren til det næste felt
+
                 } catch (ImpossibleMoveException e) {
                     // we don't do anything here  for now; we just catch the
                     // exception so that we do no pass it on to the caller

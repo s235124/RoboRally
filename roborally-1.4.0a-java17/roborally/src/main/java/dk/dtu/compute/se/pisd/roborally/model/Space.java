@@ -45,6 +45,7 @@ public class Space extends Subject {
     public final int x;
     public final int y;
 
+    private boolean isHole = false;  // Standardværdien er 'false' for alle spaces
 
     public Space(Board board, int x, int y) {
         this.board = board;
@@ -88,6 +89,15 @@ public class Space extends Subject {
         notifyChange();
     }
 
+    public boolean isHole() {
+        return isHole;
+    }
+
+    public void setHole(boolean isHole) {
+        this.isHole = isHole;
+    }
+
+   
     /**
      *
      * @author Melih Kelkitli, s235114

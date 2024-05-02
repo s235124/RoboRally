@@ -30,6 +30,9 @@ import org.jetbrains.annotations.NotNull;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * ...
  *
@@ -48,6 +51,8 @@ public class Board extends Subject {
 
     private final List<Player> players = new ArrayList<>();
 
+    private List<Space> holes;
+
     private Player current;
 
     private Phase phase = INITIALISATION;
@@ -62,6 +67,7 @@ public class Board extends Subject {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
+        holes = new ArrayList<>();
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
@@ -71,6 +77,18 @@ public class Board extends Subject {
         this.stepMode = false;
     }
 
+    public void addHole(int x, int y) {
+        if (isValidSpace(x, y)) {
+            Space space = getSpace(x, y);
+            space.setHole(true);
+        }
+    }
+
+    private boolean isValidSpace(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+   
     public void setPlayers(List<Player> players) {
         for (Player player : players) {
             Player newPlayer = new Player(this, player.getColor(), player.getName());

@@ -65,7 +65,6 @@ public class BoardView extends VBox implements ViewObserver {
         this.getChildren().add(statusLabel);
 
         spaces = new SpaceView[board.width][board.height];
-
         spaceEventHandler = new SpaceEventHandler(gameController);
 
         for (int x = 0; x < board.width; x++) {
@@ -75,6 +74,11 @@ public class BoardView extends VBox implements ViewObserver {
                 spaces[x][y] = spaceView;
                 mainBoardPane.add(spaceView, x, y);
                 spaceView.setOnMouseClicked(spaceEventHandler);
+
+                // Check if the space is a hole and update its appearance
+                if (space.isHole()) {
+                    spaceView.setStyle("-fx-background-color: black; -fx-border-color: red; -fx-border-width: 2;");
+                }
             }
         }
 
