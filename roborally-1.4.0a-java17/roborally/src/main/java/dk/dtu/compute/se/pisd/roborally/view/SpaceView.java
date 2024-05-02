@@ -61,7 +61,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
 
-        File img = new File("roborally/images/empty.png");
+        File img = new File("roborally-1.4.0a-java17/roborally/images/empty.png");
 
         String absName = img.getAbsolutePath();
 
@@ -110,7 +110,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     private ImageView getPlayerImage(Player player) {
         // long ass way of converting a relative path to absolute because url suck :(
-        File img = new File("roborally/images/r" + player.getName().charAt(player.getName().length() - 1) + ".png");
+        File img = new File("roborally-1.4.0a-java17/roborally/images/r" + player.getName().charAt(player.getName().length() - 1) + ".png");
 
         String absName = img.getAbsolutePath();
 
@@ -148,7 +148,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         // Vi antager, at væggene repræsenteres som en liste af Heading objekter i space objektet.
         List<Heading> walls = space.getWalls();
 
-        File fimg = new File("roborally/images/wall.png");
+        File fimg = new File("roborally-1.4.0a-java17/roborally/images/wall.png");
         String absName = fimg.getAbsolutePath();
 
         StringBuilder realAbsName = new StringBuilder();
