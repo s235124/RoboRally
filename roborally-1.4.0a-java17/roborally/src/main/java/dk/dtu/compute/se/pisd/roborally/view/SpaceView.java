@@ -28,8 +28,6 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -90,6 +88,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         // This space view should listen to changes of the space
         space.attach(this);
         update(space);
+        drawCheckpoints();
         drawWalls(); // Tilføj dette kald for at tegne væggene ved initialisering
     }
 
@@ -109,8 +108,32 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
     private ImageView getPlayerImage(Player player) {
-        // long ass way of converting a relative path to absolute because url suck :(
-        File img = new File("roborally/images/r" + player.getName().charAt(player.getName().length() - 1) + ".png");
+        int robot = 0;
+
+        switch (player.getColor()) {
+            case "red":
+                robot = 1;
+                break;
+            case "green":
+                robot = 2;
+                break;
+            case "blue":
+                robot = 3;
+                break;
+            case "orange":
+                robot = 4;
+                break;
+            case "grey":
+                robot = 5;
+                break;
+            case "magenta":
+                robot = 6;
+                break;
+            default:
+                break;
+        }
+
+        File img = new File("roborally/images/r" + robot + ".png");
 
         String absName = img.getAbsolutePath();
 
@@ -136,8 +159,39 @@ public class SpaceView extends StackPane implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == this.space) {
             this.getChildren().clear(); // Fjerner gamle børneelementer før opdatering
+            drawCheckpoints();
             updatePlayer(); // Derefter opdaterer vi spilleren
             drawWalls(); // Tegner væggene først
+        }
+    }
+
+    public void drawCheckpoints () {
+        for (int i = 0; i < 5; i++) {
+            if (space.board.checkpointSpaces[i].charAt(0) - '0' == space.x &&
+                    space.board.checkpointSpaces[i].charAt(2) - '0' == space.y) {
+                File fimg = new File("roborally/images/" + (i + 1) + ".png");
+
+                String absName = fimg.getAbsolutePath();
+
+                StringBuilder realAbsName = new StringBuilder();
+
+                for (int j = 0; j < absName.length(); j++) {
+                    if (absName.charAt(j) == ' ') {
+                        realAbsName.append("%20");
+                        continue;
+                    }
+                    if (absName.charAt(j) == '\\') {
+                        realAbsName.append("/");
+                        continue;
+                    }
+                    realAbsName.append(absName.charAt(j));
+                }
+
+                this.setStyle("-fx-background-image: url(file:" + realAbsName + "); " +
+                        "-fx-background-repeat: stretch; " +
+                        "-fx-background-size: " + SPACE_WIDTH + " " + SPACE_HEIGHT + "; " +
+                        "-fx-background-position: center center;");
+            }
         }
     }
 

@@ -65,6 +65,12 @@ public class GameController {
      *
      */
     private void initializeGame() {
+        board.checkpointSpaces[0] = "0,1";
+        board.checkpointSpaces[1] = "1,2";
+        board.checkpointSpaces[2] = "2,3";
+        board.checkpointSpaces[3] = "3,4";
+        board.checkpointSpaces[4] = "4,5";
+
         //Tilføjer en vandret væg fra
         board.addWallToSpace(2, 5, Heading.SOUTH);
         board.addWallToSpace(1, 5, Heading.NORTH);
@@ -82,6 +88,15 @@ public class GameController {
             if (target != null && !target.hasAnyWall()) { // Tjek for væg i spillerens bevægelsesretning
                 try {
                     moveToSpace(player, target, heading);
+                    for (int i = 0; i < 5; i++) {
+                        int x = board.checkpointSpaces[i].charAt(0) - '0';
+                        int y = board.checkpointSpaces[i].charAt(2) - '0';
+                        if (target.x == x && target.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
+                            player.points++;
+                            System.out.println(player.getName() + " has gone through a checkpoint");
+                            player.checkpointSpacesPassedThrough.add(x + "," + y);
+                        }
+                    }
                 } catch (ImpossibleMoveException e) {
                     // we don't do anything here  for now; we just catch the
                     // exception so that we do no pass it on to the caller
@@ -317,6 +332,8 @@ public class GameController {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
             if (player != null) {
+                if (player.points >= 5)
+                    System.out.println(player.getName() + " has won");
                 for (int j = 0; j < Player.NO_REGISTERS; j++) {
                     CommandCardField field = player.getProgramField(j);
                     field.setCard(null);

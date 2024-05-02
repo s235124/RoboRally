@@ -58,6 +58,8 @@ public class Board extends Subject {
 
     private int stepCounter;
 
+    public String[] checkpointSpaces;
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
@@ -69,6 +71,7 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
+        checkpointSpaces = new String[5];
     }
 
     public void setPlayers(List<Player> players) {
@@ -256,6 +259,7 @@ public class Board extends Subject {
         return "Phase: " + getPhase().name() +
                 ", Player = " + getCurrentPlayer().getName() +
                 ", Step: " + getStep() +
-                ", moves: " + getStepCounter();
+                ", moves: " + getStepCounter() +
+                ", Player Points = " + getCurrentPlayer().points;
     }
 }
