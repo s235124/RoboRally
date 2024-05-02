@@ -25,15 +25,11 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -104,19 +100,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (player != null) {
             ImageView playerImgView = getPlayerImage(player);
 
-//            Polygon arrow = new Polygon(0.0, 0.0,
-//                    10.0, 20.0,
-//                    20.0, 0.0 );
-//            try {
-//                arrow.setFill(Color.valueOf(player.getColor()));
-//            } catch (Exception e) {
-//                arrow.setFill(Color.MEDIUMPURPLE);
-//            }
-
             playerImgView.setFitWidth(SPACE_WIDTH * 0.8);
             playerImgView.setFitHeight(SPACE_HEIGHT * 0.8);
 
-            playerImgView.setRotate((90*player.getHeading().ordinal())%360);
+            playerImgView.setRotate((90 * player.getHeading().ordinal()) % 360);
             this.getChildren().add(playerImgView);
         }
     }
@@ -149,52 +136,54 @@ public class SpaceView extends StackPane implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == this.space) {
             this.getChildren().clear(); // Fjerner gamle børneelementer før opdatering
-            drawWalls(); // Tegner væggene først
             updatePlayer(); // Derefter opdaterer vi spilleren
+            drawWalls(); // Tegner væggene først
         }
     }
 
     /**
-     *
      * @author Melih Kelkitli, s235114
-     *
      */
     private void drawWalls() {
         // Vi antager, at væggene repræsenteres som en liste af Heading objekter i space objektet.
         List<Heading> walls = space.getWalls();
 
+        File fimg = new File("roborally/images/wall.png");
+        String absName = fimg.getAbsolutePath();
+
+        StringBuilder realAbsName = new StringBuilder();
+
+        for (int i = 0; i < absName.length(); i++) {
+            if (absName.charAt(i) == ' ') {
+                realAbsName.append("%20");
+                continue;
+            }
+            if (absName.charAt(i) == '\\') {
+                realAbsName.append("/");
+                continue;
+            }
+            realAbsName.append(absName.charAt(i));
+        }
+
+        Image img = new Image("file:" + realAbsName);
+
+        ImageView imgv = new ImageView(img);
+
+        imgv.setFitWidth(5);
+        imgv.setFitHeight(60);
+
         for (Heading wall : walls) {
-            Line line = new Line();
             switch (wall) {
-                case NORTH:
-                    line.setStartX(0);
-                    line.setEndX(SPACE_WIDTH);
-                    line.setStartY(0);
-                    line.setEndY(0);
+                case NORTH, SOUTH:
+                    imgv.setRotate(90);
                     break;
-                case SOUTH:
-                    line.setStartX(0);
-                    line.setEndX(SPACE_WIDTH);
-                    line.setStartY(SPACE_HEIGHT);
-                    line.setEndY(SPACE_HEIGHT);
-                    break;
-                case EAST:
-                    line.setStartX(SPACE_WIDTH);
-                    line.setEndX(SPACE_WIDTH);
-                    line.setStartY(0);
-                    line.setEndY(SPACE_HEIGHT);
-                    break;
-                case WEST:
-                    line.setStartX(0);
-                    line.setEndX(0);
-                    line.setStartY(0);
-                    line.setEndY(SPACE_HEIGHT);
+                case EAST, WEST:
+                    imgv.setRotate(180);
                     break;
             }
-            line.setStroke(Color.RED); // Vælg en passende farve for væggen
-            line.setStrokeWidth(5); //Vælg en passende tykkelse for væggen
-            this.getChildren().add(line);
+
+            this.getChildren().add(imgv);
         }
     }
-
 }
+

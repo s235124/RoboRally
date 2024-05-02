@@ -103,6 +103,9 @@ public class Space extends Subject {
     public boolean hasWall(Heading wallDirection) {
         return walls.contains(wallDirection);
     }
+    public boolean hasAnyWall() {
+        return !walls.isEmpty();
+    }
 
     public String toString() {
         return player == null ? "No player on space (" + x + "," + y + ")" : player.getName() + ", (" + x + "," + y + ")";

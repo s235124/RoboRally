@@ -67,8 +67,9 @@ public class GameController {
     private void initializeGame() {
         //Tilføjer en vandret væg fra
         board.addWallToSpace(2, 5, Heading.SOUTH);
-        board.addWallToSpace(1, 5, Heading.SOUTH);
-        board.addWallToSpace(3, 5, Heading.SOUTH);
+        board.addWallToSpace(1, 5, Heading.NORTH);
+//        board.addWallToSpace(1, 5, Heading.WEST);
+        board.addWallToSpace(3, 5, Heading.WEST);
     }
 
     public void moveForward(@NotNull Player player) {
@@ -78,7 +79,7 @@ public class GameController {
 
             Space target = board.getNeighbour(space, heading); //target er vores næste space som ønsker spilleren skal bevæge sig til
 
-            if (target != null && !target.hasWall(heading)) { // Tjek for væg i spillerens bevægelsesretning
+            if (target != null && !target.hasAnyWall()) { // Tjek for væg i spillerens bevægelsesretning
                 try {
                     moveToSpace(player, target, heading);
                 } catch (ImpossibleMoveException e) {
@@ -113,15 +114,7 @@ public class GameController {
 
     }
 
-    //public void turnLeftOrTurnRight(Player player){
-      //  Heading heading = player.getHeading();
-
-
-   // }
-
    public void turnLeftOrTurnRight(Player player) {
-    Platform.runLater(() -> {
-        // Create a dialog window with options
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Choose Direction");
         alert.setHeaderText("Choose which way to turn");
@@ -135,39 +128,37 @@ public class GameController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == buttonLeft) {
-            turnLeft(player);
+           turnLeft(player);
         } else if (result.isPresent() && result.get() == buttonRight) {
-            turnRight(player);
+           turnRight(player);
         }
-
-    });
-}
+   }
 
 
     //U-Turn
-       private void uTurn(@NotNull Player player) {
+   private void uTurn(@NotNull Player player) {
         Heading currentHeading = player.getHeading();
         player.setHeading(currentHeading.next().next());
-    }
+   }
 
     //BackUp
-        private void BackUp(@NotNull Player player){
-            if (player.board == board) {
-                Space space = player.getSpace();
-                Heading heading = player.getHeading().next().next();
+    private void BackUp(@NotNull Player player){
+        if (player.board == board) {
+            Space space = player.getSpace();
+            Heading heading = player.getHeading().next().next();
 
-                Space target = board.getNeighbour(space, heading);
-                if (target != null) {
-                    try {
-                        moveToSpace(player, target, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // we don't do anything here  for now; we just catch the
-                        // exception so that we do no pass it on to the caller
-                        // (which would be very bad style).
-                    }
+            Space target = board.getNeighbour(space, heading);
+            if (target != null && !target.hasAnyWall()) {
+                try {
+                    moveToSpace(player, target, heading);
+                } catch (ImpossibleMoveException e) {
+                    // we don't do anything here  for now; we just catch the
+                    // exception so that we do no pass it on to the caller
+                    // (which would be very bad style).
                 }
             }
         }
+    }
 
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
