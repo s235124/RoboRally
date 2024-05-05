@@ -51,7 +51,7 @@ public class Board extends Subject {
 
     private final List<Player> players = new ArrayList<>();
 
-    private List<Space> holes;
+    public List<Space> holes;
 
     private Player current;
 
@@ -81,6 +81,7 @@ public class Board extends Subject {
         if (isValidSpace(x, y)) {
             Space space = getSpace(x, y);
             space.setHole(true);
+            holes.add(space);
         }
     }
 

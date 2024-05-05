@@ -72,7 +72,7 @@ public class GameController {
         board.addWallToSpace(3, 5, Heading.WEST);
 
 
-        board.addHole(2,2);
+        board.addHole(0,2);
     }
 
     public void moveForward(@NotNull Player player) {
@@ -242,6 +242,11 @@ public class GameController {
                 if (card != null) {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
+                }
+                for (int j = 0; j < board.holes.size(); j++) {
+                    if (currentPlayer.getSpace() == board.holes.get(j)) {
+                        currentPlayer.died();
+                    }
                 }
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {

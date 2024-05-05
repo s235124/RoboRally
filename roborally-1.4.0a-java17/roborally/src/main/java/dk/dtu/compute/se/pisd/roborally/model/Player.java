@@ -155,6 +155,18 @@ public class Player extends Subject {
             this.cards[i].setCard(cards[i].getCard());
     }
 
+    public void died () {
+        int playerNum = this.name.charAt(this.name.length() - 1) - '0' - 1;
+        Space defaultSpace = board.getSpace(playerNum, playerNum);
+
+        if (defaultSpace.getPlayer() != null) {
+            board.getSpace(defaultSpace.x, defaultSpace.y).getPlayer().setSpace(board.getSpace(defaultSpace.x + 1, defaultSpace.y));
+        }
+
+        this.setSpace(defaultSpace);
+        // Also reset points
+    }
+
     @Override
     public String toString() {
         return board.toString() + "; " + name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
