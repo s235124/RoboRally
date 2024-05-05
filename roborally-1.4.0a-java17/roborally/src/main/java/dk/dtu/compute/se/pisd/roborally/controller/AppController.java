@@ -38,10 +38,7 @@ import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * ...
@@ -82,8 +79,39 @@ public class AppController implements Observer {
             Board board = new Board(8,8);
             gameController = new GameController(board);
             int no = result.get();
+
+            List<String> selectedColors = new ArrayList<>();
+
             for (int i = 0; i < no; i++) {
+                //v
+                List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
+                remainingColors.removeAll(selectedColors);
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
+                ChoiceDialog<String> dialog2 = new ChoiceDialog<>(remainingColors.get(0), remainingColors);
+                dialog.setTitle("Color Selection");
+                dialog.setHeaderText("Player " + (i + 1) + ": Choose a color");
+                dialog.setContentText("Color:");
+
+                Optional<String> result2 = dialog2.showAndWait();
+                if (result2.isPresent()) {
+                    String selectedColor = result2.get();
+                    selectedColors.add(selectedColor);
+                    // Use the selected color to initialize the player
+                    player.setColor(selectedColor);
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Color Selected");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Player " + (i + 1) + " has chosen " + selectedColor + " as their color.");
+                    alert.showAndWait();
+                } else {
+                    // User closed the dialog without selecting a color
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("No Color Selected");
+                    alert.setHeaderText(null);
+                    alert.setContentText("No color was selected for Player " + (i + 1) + ". Exiting...");
+                    alert.showAndWait();
+                    return;
+                }
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(i % board.width, i));
             }
