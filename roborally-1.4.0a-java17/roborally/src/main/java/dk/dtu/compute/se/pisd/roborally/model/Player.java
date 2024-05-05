@@ -173,7 +173,9 @@ public class Player extends Subject {
         }
 
         this.setSpace(defaultSpace);
-        // Also reset points
+        this.points = 0;
+        this.checkpointSpacesPassedThrough.clear();
+        System.out.println(this.name + " has died, and lost all their points, and gone back to space with coordinates (" + defaultSpace.x + ", " + defaultSpace.y + ")");
     }
 
     @Override
