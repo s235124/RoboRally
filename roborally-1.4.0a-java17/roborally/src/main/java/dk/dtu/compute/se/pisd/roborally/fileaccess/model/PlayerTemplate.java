@@ -10,6 +10,8 @@ public class PlayerTemplate {
 
     public int spaceX;
     public int spaceY;
+    public int points;
+
     public Heading heading;
 
     public CommandCardFieldTemplate[] program = new CommandCardFieldTemplate[5];

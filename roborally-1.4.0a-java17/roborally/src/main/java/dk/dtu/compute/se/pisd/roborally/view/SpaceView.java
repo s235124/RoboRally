@@ -167,8 +167,8 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public void drawCheckpoints () {
         for (int i = 0; i < 5; i++) {
-            if (space.board.checkpointSpaces[i].charAt(0) - '0' == space.x &&
-                    space.board.checkpointSpaces[i].charAt(2) - '0' == space.y) {
+            if (space.board.checkpointSpaces.get(i).charAt(0) - '0' == space.x &&
+                    space.board.checkpointSpaces.get(i).charAt(2) - '0' == space.y) {
                 File fimg = new File("roborally/images/" + (i + 1) + ".png");
 
                 String absName = fimg.getAbsolutePath();

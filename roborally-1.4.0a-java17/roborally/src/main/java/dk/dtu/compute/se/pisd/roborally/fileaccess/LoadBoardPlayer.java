@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class LoadBoardPlayer {
     private static final String BOARDSFOLDER = "boards";
@@ -54,6 +55,7 @@ public class LoadBoardPlayer {
             result.setPhase(template.phase);
             result.setStep(template.step);
             result.setStepMode(template.stepMode);
+            result.checkpointSpaces.addAll(template.checkpointSpaces);
 
             for (SpaceTemplate spaceTemplate: template.spaces) {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
@@ -67,6 +69,7 @@ public class LoadBoardPlayer {
                 Player player = new Player(result, playerTemplate.color, playerTemplate.name);
                 player.setSpace(result.getSpace(playerTemplate.spaceX, playerTemplate.spaceY));
                 player.setHeading(playerTemplate.heading);
+                player.points = playerTemplate.points;
                 CommandCardField[] programs = new CommandCardField[5];
                 CommandCardField[] cards = new CommandCardField[8];
 
@@ -117,6 +120,7 @@ public class LoadBoardPlayer {
         template.step = board.getStep();
         template.stepMode = board.isStepMode();
         template.phase = board.getPhase();
+        template.checkpointSpaces = new ArrayList<>();
 
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {
@@ -128,6 +132,14 @@ public class LoadBoardPlayer {
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
                     template.spaces.add(spaceTemplate);
+                    continue;
+                }
+                for (int k = 0; k < board.checkpointSpaces.size(); k++) {
+                    int x = board.checkpointSpaces.get(k).charAt(0) - '0';
+                    int y = board.checkpointSpaces.get(k).charAt(2) - '0';
+                    if (space.x == x && space.y == y) {
+                        template.checkpointSpaces.add(board.checkpointSpaces.get(k));
+                    }
                 }
             }
         }
@@ -139,6 +151,7 @@ public class LoadBoardPlayer {
             playerTemplate.color = player.getColor();
             playerTemplate.spaceX = player.getSpace().x;
             playerTemplate.spaceY = player.getSpace().y;
+            playerTemplate.points = player.points;
             playerTemplate.heading = player.getHeading();
 
             for (int j = 0; j < 5; j++) {

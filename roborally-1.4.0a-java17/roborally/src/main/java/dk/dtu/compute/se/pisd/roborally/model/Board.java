@@ -63,7 +63,7 @@ public class Board extends Subject {
 
     private int stepCounter;
 
-    public String[] checkpointSpaces;
+    public List<String> checkpointSpaces;
 
     public Board(int width, int height) {
         this.width = width;
@@ -77,7 +77,7 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
-        checkpointSpaces = new String[5];
+        checkpointSpaces = new ArrayList<>();
     }
 
     public void addHole(int x, int y) {
