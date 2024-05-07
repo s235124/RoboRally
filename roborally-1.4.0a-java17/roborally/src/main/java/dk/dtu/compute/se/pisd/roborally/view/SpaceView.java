@@ -173,7 +173,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
                 String absName = fimg.getAbsolutePath();
 
-                StringBuilder realAbsName = new StringBuilder();
+                StringBuilder realAbsName = new StringBuilder().append("file:");
 
                 for (int j = 0; j < absName.length(); j++) {
                     if (absName.charAt(j) == ' ') {
@@ -187,7 +187,7 @@ public class SpaceView extends StackPane implements ViewObserver {
                     realAbsName.append(absName.charAt(j));
                 }
 
-                this.setStyle("-fx-background-image: url(file:" + realAbsName + "); " +
+                this.setStyle("-fx-background-image: url(" + realAbsName + "); " +
                         "-fx-background-repeat: stretch; " +
                         "-fx-background-size: " + SPACE_WIDTH + " " + SPACE_HEIGHT + "; " +
                         "-fx-background-position: center center;");

@@ -33,6 +33,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
+import static dk.dtu.compute.se.pisd.roborally.view.SpaceView.SPACE_HEIGHT;
+import static dk.dtu.compute.se.pisd.roborally.view.SpaceView.SPACE_WIDTH;
+
 /**
  * ...
  *
@@ -76,7 +81,24 @@ public class BoardView extends VBox implements ViewObserver {
 
                 // Check if the space is a hole and update its appearance
                 if (space.isHole()) {
-                    spaceView.setStyle("-fx-background-color: black; -fx-border-color: red; -fx-border-width: 2;");
+                    File img = new File("roborally/images/hole.png");
+
+                    String absName = img.getAbsolutePath();
+
+                    StringBuilder realAbsName = new StringBuilder().append("file:");
+
+                    for (int i = 0; i < absName.length(); i++) {
+                        if (absName.charAt(i) == ' ') {
+                            realAbsName.append("%20");
+                            continue;
+                        }
+                        if (absName.charAt(i) == '\\') {
+                            realAbsName.append("/");
+                            continue;
+                        }
+                        realAbsName.append(absName.charAt(i));
+                    }
+                    spaceView.setStyle("-fx-background-image: url(" + realAbsName + "); -fx-background-size: "+ SPACE_WIDTH + " " + SPACE_HEIGHT +";");
                 }
             }
         }

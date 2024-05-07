@@ -91,15 +91,6 @@ public class GameController {
             if (target != null && !target.hasAnyWall()) { // Tjek for væg i spillerens bevægelsesretning
                 try {
                     moveToSpace(player, target, heading);
-                    for (int i = 0; i < 5; i++) {
-                        int x = board.checkpointSpaces[i].charAt(0) - '0';
-                        int y = board.checkpointSpaces[i].charAt(2) - '0';
-                        if (target.x == x && target.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
-                            player.points++;
-                            System.out.println(player.getName() + " has gone through a checkpoint");
-                            player.checkpointSpacesPassedThrough.add(x + "," + y);
-                        }
-                    }
                 } catch (ImpossibleMoveException e) {
                     // we don't do anything here  for now; we just catch the
                     // exception so that we do no pass it on to the caller
@@ -111,10 +102,8 @@ public class GameController {
 
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
-
         moveForward(player);
         moveForward(player);
-
     }
 
     // TODO Assignment A3
@@ -181,8 +170,9 @@ public class GameController {
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
         Player other = space.getPlayer();
+        Space target = board.getNeighbour(space, heading);
+
         if (other != null){
-            Space target = board.getNeighbour(space, heading);
             if (target != null) {
                 // XXX Note that there might be additional problems with
                 //     infinite recursion here (in some special cases)!
@@ -198,6 +188,16 @@ public class GameController {
             }
         }
         player.setSpace(space);
+
+        for (int i = 0; i < 5; i++) {
+            int x = board.checkpointSpaces[i].charAt(0) - '0';
+            int y = board.checkpointSpaces[i].charAt(2) - '0';
+            if (space.x == x && space.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
+                space.getPlayer().points++;
+                System.out.println(space.getPlayer().getName() + " has gone through a checkpoint");
+                space.getPlayer().checkpointSpacesPassedThrough.add(x + "," + y);
+            }
+        }
     }
 
     public void moveCurrentPlayerToSpace(Space space) {
@@ -257,6 +257,10 @@ public class GameController {
                 if (card != null) {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
+                    if (currentPlayer.points >= 5) {
+                        System.out.println(currentPlayer.getName() + " has won");
+
+                    }
                 }
                 for (int j = 0; j < board.holes.size(); j++) {
                     if (currentPlayer.getSpace() == board.holes.get(j)) {
@@ -340,8 +344,6 @@ public class GameController {
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
             if (player != null) {
-                if (player.points >= 5)
-                    System.out.println(player.getName() + " has won");
                 for (int j = 0; j < Player.NO_REGISTERS; j++) {
                     CommandCardField field = player.getProgramField(j);
                     field.setCard(null);
