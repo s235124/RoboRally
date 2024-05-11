@@ -59,6 +59,11 @@ public class AppController implements Observer {
         this.roboRally = roboRally;
     }
 
+    /**
+     * Starts a new game.
+     * Includes the ability to choose which robot each player wants.
+     * @author Nico Laursen (s23
+     */
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");

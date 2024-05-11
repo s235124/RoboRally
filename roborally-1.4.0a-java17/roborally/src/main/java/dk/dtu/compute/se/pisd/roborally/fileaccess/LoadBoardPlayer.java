@@ -25,6 +25,12 @@ public class LoadBoardPlayer {
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String JSON_EXT = "json";
 
+    /**
+     * A method to load a board from a file
+     * @param boardname
+     * @return A board with the name boardname
+     * @author Mirza Zia Beg (s235124)
+     */
     public static Board loadBoardPlayer(String boardname) {
         if (boardname == null) {
             boardname = DEFAULTBOARD;
@@ -112,6 +118,12 @@ public class LoadBoardPlayer {
         return null;
     }
 
+    /**
+     * A method to save a board
+     * @param board The board to be saved
+     * @param name The name of the file
+     * @author Mirza Zia Beg (s235124)
+     */
     public static void saveBoardPlayer(Board board, String name) {
         BoardTemplate template = new BoardTemplate();
         template.width = board.width;

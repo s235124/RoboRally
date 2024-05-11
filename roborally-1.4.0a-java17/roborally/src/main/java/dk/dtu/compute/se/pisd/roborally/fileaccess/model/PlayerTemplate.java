@@ -4,6 +4,9 @@ import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
+/**
+ * A template for the player for saving and loading
+ */
 public class PlayerTemplate {
     public String name;
     public String color;

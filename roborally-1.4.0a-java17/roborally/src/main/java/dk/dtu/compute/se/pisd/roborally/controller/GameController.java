@@ -65,11 +65,11 @@ public class GameController {
      *
      */
     private void initializeGame() {
-        board.checkpointSpaces[0] = "0,1";
-        board.checkpointSpaces[1] = "1,2";
-        board.checkpointSpaces[2] = "2,3";
-        board.checkpointSpaces[3] = "3,4";
-        board.checkpointSpaces[4] = "4,5";
+        board.checkpointSpaces.add("0,1");
+        board.checkpointSpaces.add("1,2");
+        board.checkpointSpaces.add("2,3");
+        board.checkpointSpaces.add("3,4");
+        board.checkpointSpaces.add("4,5");
 
         //Tilføjer en vandret væg fra
         board.addWallToSpace(2, 5, Heading.SOUTH);
@@ -110,45 +110,55 @@ public class GameController {
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.prev());
-
     }
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
-
         Heading heading = player.getHeading();
         player.setHeading(heading.next());
-
     }
 
-   public void turnLeftOrTurnRight(Player player) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Choose Direction");
-        alert.setHeaderText("Choose which way to turn");
-        alert.setContentText("Choose your option.");
+    /**
+     * A method for choosing whether the player wants to go left or right
+     * @param player The player to be rotated
+     * @author Subeer Abdirahman Awil Mohamed (s235088)
+     */
+     public void turnLeftOrTurnRight(Player player) {
+         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+         alert.setTitle("Choose Direction");
+         alert.setHeaderText("Choose which way to turn");
+         alert.setContentText("Choose your option.");
 
-        ButtonType buttonLeft = new ButtonType("Turn Left");
-        ButtonType buttonRight = new ButtonType("Turn Right");
-        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+         ButtonType buttonLeft = new ButtonType("Turn Left");
+         ButtonType buttonRight = new ButtonType("Turn Right");
+         ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
+         alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == buttonLeft) {
-           turnLeft(player);
-        } else if (result.isPresent() && result.get() == buttonRight) {
-           turnRight(player);
-        }
-   }
+         Optional<ButtonType> result = alert.showAndWait();
+         if (result.isPresent() && result.get() == buttonLeft) {
+            turnLeft(player);
+         } else if (result.isPresent() && result.get() == buttonRight) {
+            turnRight(player);
+         }
+     }
 
 
-    //U-Turn
+    /**
+     * A method to turn the player 180 degrees
+     * @param player The player to be rotated
+     * @author Mohammed Josef Ismael (s235079)
+     */
    private void uTurn(@NotNull Player player) {
         Heading currentHeading = player.getHeading();
         player.setHeading(currentHeading.next().next());
    }
 
-    //BackUp
+    /**
+     * A method to move the player in the opposite direction of the players heading
+     * @param player The player to be moved
+     * @author Mohammed Josef Ismael (s235079)
+     */
     private void BackUp(@NotNull Player player){
         if (player.board == board) {
             Space space = player.getSpace();
@@ -190,8 +200,8 @@ public class GameController {
         player.setSpace(space);
 
         for (int i = 0; i < 5; i++) {
-            int x = board.checkpointSpaces[i].charAt(0) - '0';
-            int y = board.checkpointSpaces[i].charAt(2) - '0';
+            int x = board.checkpointSpaces.get(i).charAt(0) - '0';
+            int y = board.checkpointSpaces.get(i).charAt(2) - '0';
             if (space.x == x && space.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
                 space.getPlayer().points++;
                 System.out.println(space.getPlayer().getName() + " has gone through a checkpoint");

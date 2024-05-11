@@ -92,6 +92,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         drawWalls(); // Tilføj dette kald for at tegne væggene ved initialisering
     }
 
+    /**
+     * A method to draw the players every time it is called.
+     * @author Mirza Zia Beg (s235124)
+     */
     private void updatePlayer() {
         this.getChildren().clear();
 
@@ -107,6 +111,12 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    /**
+     * Gets an image of the player based on their color.
+     * @param player The player whose icon is needed to be found
+     * @return An ImageView of the player
+     * @author Mirza Zia Beg (s235124)
+     */
     private ImageView getPlayerImage(Player player) {
         int robot = 0;
 
@@ -165,6 +175,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    /**
+     * Draws the checkpoints on the spaces where they should be.
+     * @author Mirza Zia Beg (s235124)
+     */
     public void drawCheckpoints () {
         for (int i = 0; i < 5; i++) {
             if (space.board.checkpointSpaces.get(i).charAt(0) - '0' == space.x &&
