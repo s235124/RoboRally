@@ -177,6 +177,10 @@ public class GameController {
         }
     }
 
+    private void shoot (Player player) {
+        board.laserBeam(player);
+    }
+
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
         Player other = space.getPlayer();
@@ -325,8 +329,12 @@ public class GameController {
                 case U_TURN:
                     this.uTurn(player);
                     break;
-                    case BackUp:
+                case BackUp:
                     this.BackUp(player);
+                    break;
+                case SHOOT:
+                    this.shoot(player);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }

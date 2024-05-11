@@ -92,7 +92,64 @@ public class Board extends Subject {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-   
+    public Player iterateSpace(Player shooter){
+        int x = shooter.getSpace().x;
+        int y = shooter.getSpace().y;
+
+        if (shooter.getHeading() == Heading.NORTH || shooter.getHeading() == Heading.SOUTH)
+            for (int i = 0; i < height; i++){
+                if(spaces[x][i].getPlayer() != null && spaces[x][i].getPlayer() != shooter){
+                    return spaces[x][i].getPlayer();
+                }
+            }
+        else
+            for (int i = 0; i < width; i++){
+                if(spaces[i][y].getPlayer() != null && spaces[i][y].getPlayer() != shooter){
+                    return spaces[i][y].getPlayer();
+                }
+            }
+        return null;
+    }
+
+
+    public void laserBeam(Player shooter){
+
+        Player v = iterateSpace(shooter);
+        if(v == null){
+            System.out.println("v");
+            return;
+        }
+        System.out.println("v's y coord is "+ v.getSpace().y);
+
+        if(shooter.getHeading() == Heading.SOUTH && shooter.getSpace().y < v.getSpace().y){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("ve");
+            //animation for later
+            //Platform.runLater(() -> {
+            //LaserBeam laserBeam = new LaserBeam(shooter.getSpace().x*60, shooter.getSpace().y+60, v.getSpace().x*60, v.getSpace().y+60);
+            // Add the laser beam to
+            //mainBoardPane.getChildren().add(laserBeam);
+            //laserBeam.animate();
+            //});
+        }
+        else if(shooter.getHeading() == Heading.NORTH && shooter.getSpace().y > v.getSpace().y){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("vee");
+        }
+        else if(shooter.getHeading() == Heading.WEST && shooter.getSpace().x > v.getSpace().x){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("vee");
+        }
+        else if(shooter.getHeading() == Heading.EAST && shooter.getSpace().x < v.getSpace().x){
+            Heading heading = v.getHeading();
+            v.setHeading(heading.next().next());
+            System.out.println("vee");
+        }
+    }
+
     public void setPlayers(List<Player> players) {
         for (Player player : players) {
             Player newPlayer = new Player(this, player.getColor(), player.getName());
