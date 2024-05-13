@@ -180,6 +180,6 @@ public class Player extends Subject {
 
     @Override
     public String toString() {
-        return board.toString() + "; " + name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
+        return name + ", has color: " + color + ", at position: (" + space.x + "," + space.y + "), facing: " + heading;
     }
 }

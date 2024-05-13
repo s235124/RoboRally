@@ -171,7 +171,7 @@ public class GameController {
      * @param player The player to be rotated
      * @author Mohammed Josef Ismael (s235079)
      */
-   private void uTurn(@NotNull Player player) {
+   public void uTurn(@NotNull Player player) {
         Heading currentHeading = player.getHeading();
         player.setHeading(currentHeading.next().next());
    }
@@ -181,7 +181,7 @@ public class GameController {
      * @param player The player to be moved
      * @author Mohammed Josef Ismael (s235079)
      */
-    private void BackUp(@NotNull Player player){
+    public void BackUp(@NotNull Player player){
         if (player.board == board) {
             Space space = player.getSpace();
             Heading heading = player.getHeading().next().next();
@@ -225,7 +225,7 @@ public class GameController {
         }
         player.setSpace(space);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < board.checkpointSpaces.size(); i++) {
             int x = board.checkpointSpaces.get(i).charAt(0) - '0';
             int y = board.checkpointSpaces.get(i).charAt(2) - '0';
             if (space.x == x && space.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
@@ -240,6 +240,12 @@ public class GameController {
 
     public void moveCurrentPlayerToSpace(Space space) {
         // TODO: Import or Implement this method. This method is only for debugging purposes. Not useful for the game.
+        if (space == null)
+            return;
+
+        Player currentPlayer = board.getCurrentPlayer();
+        currentPlayer.setSpace(space);
+        board.setCurrentPlayer(board.getPlayer(board.getPlayerNumber(currentPlayer) + 1));
     }
 
     private void makeProgramFieldsVisible(int register) {
