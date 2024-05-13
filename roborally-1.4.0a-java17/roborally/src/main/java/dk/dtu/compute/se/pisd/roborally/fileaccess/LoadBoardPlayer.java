@@ -68,7 +68,14 @@ public class LoadBoardPlayer {
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
                     space.getWalls().addAll(spaceTemplate.walls);
+
                 }
+            }
+
+            for (int i = 0; i < template.holes.size(); i++) {
+                int x = template.holes.get(i).charAt(0) - '0';
+                int y = template.holes.get(i).charAt(2) - '0';
+                result.addHole(x,y);
             }
 
             for (PlayerTemplate playerTemplate: template.players) {
@@ -134,8 +141,8 @@ public class LoadBoardPlayer {
         template.phase = board.getPhase();
         template.checkpointSpaces = new ArrayList<>();
 
-        for (int i=0; i<board.width; i++) {
-            for (int j=0; j<board.height; j++) {
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
                 Space space = board.getSpace(i,j);
                 if (!space.getWalls().isEmpty() || !space.getActions().isEmpty()) {
                     SpaceTemplate spaceTemplate = new SpaceTemplate();
@@ -144,6 +151,7 @@ public class LoadBoardPlayer {
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
                     template.spaces.add(spaceTemplate);
+
                     continue;
                 }
                 for (int k = 0; k < board.checkpointSpaces.size(); k++) {
@@ -152,6 +160,9 @@ public class LoadBoardPlayer {
                     if (space.x == x && space.y == y) {
                         template.checkpointSpaces.add(board.checkpointSpaces.get(k));
                     }
+                }
+                if (board.holes.contains(space)) {
+                    template.holes.add(space.x + "," + space.y);
                 }
             }
         }

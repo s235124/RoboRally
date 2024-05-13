@@ -48,10 +48,11 @@ public class BoardTemplate {
 
     public List<SpaceTemplate> spaces = new ArrayList<>();
 
+    public List<String> holes = new ArrayList<>();
+
     public List<String> checkpointSpaces;
 
     public List<PlayerTemplate> players = new ArrayList<>();
-
 
     public String currentPlayerName;
 }

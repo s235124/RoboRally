@@ -56,29 +56,40 @@ public class GameController {
 
     public GameController(Board board) {
         this.board = board;
-        initializeGame();
     }
 
+
+    //For new game
+    public GameController(Board board, boolean e) {
+        this.board = board;
+        initializeGame();
+    }
     /**
      *
      * @author Melih Kelkitli, s235114
      *
      */
     private void initializeGame() {
-        board.checkpointSpaces.add("0,1");
-        board.checkpointSpaces.add("1,2");
-        board.checkpointSpaces.add("2,3");
-        board.checkpointSpaces.add("3,4");
-        board.checkpointSpaces.add("4,5");
+        board.checkpointSpaces.add("0,2");
+        board.checkpointSpaces.add("0,4");
+        board.checkpointSpaces.add("0,6");
+        board.checkpointSpaces.add("7,3");
+        board.checkpointSpaces.add("7,5");
 
-        //Tilføjer en vandret væg fra
-        board.addWallToSpace(2, 5, Heading.SOUTH);
-        board.addWallToSpace(1, 5, Heading.NORTH);
-//        board.addWallToSpace(1, 5, Heading.WEST);
-        board.addWallToSpace(3, 5, Heading.WEST);
+        for (int i = 0; i < 8; i++) {
+            board.addWallToSpace(i, 7, Heading.NORTH);
+        }
 
+        board.addWallToSpace(2,0,Heading.WEST);
+        board.addWallToSpace(2,1,Heading.WEST);
 
-        board.addHole(0,2);
+        board.addWallToSpace(5,0,Heading.WEST);
+        board.addWallToSpace(5,1,Heading.WEST);
+
+        board.addHole(3,2);
+        board.addHole(3,4);
+        board.addHole(4,3);
+        board.addHole(4,5);
     }
 
     public void moveForward(@NotNull Player player) {
@@ -105,7 +116,6 @@ public class GameController {
      * @author sakariye, s235100
      *
      */
-    // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
@@ -116,20 +126,16 @@ public class GameController {
      * @author sakariye, s235100
      *
      */
-
-    // TODO Assignment A3
-    public void turnRight(@NotNull Player player) {
-        Heading heading = player.getHeading();
-        player.setHeading(heading.prev());
-    }
+     public void turnRight(@NotNull Player player) {
+         Heading heading = player.getHeading();
+         player.setHeading(heading.prev());
+     }
 
     /**
      *
      * @author sakariye, s235100
      *
      */
-
-    // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.next());
@@ -223,9 +229,11 @@ public class GameController {
             int x = board.checkpointSpaces.get(i).charAt(0) - '0';
             int y = board.checkpointSpaces.get(i).charAt(2) - '0';
             if (space.x == x && space.y == y && !player.checkpointSpacesPassedThrough.contains(x + "," + y)) {
-                space.getPlayer().points++;
-                System.out.println(space.getPlayer().getName() + " has gone through a checkpoint");
-                space.getPlayer().checkpointSpacesPassedThrough.add(x + "," + y);
+                if (i == player.checkpointSpacesPassedThrough.size()) {
+                    space.getPlayer().points++;
+                    System.out.println(space.getPlayer().getName() + " has gone through checkpoint " + (i + 1) + ".");
+                    space.getPlayer().checkpointSpacesPassedThrough.add(x + "," + y);
+                }
             }
         }
     }
@@ -287,7 +295,7 @@ public class GameController {
                 if (card != null) {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
-                    if (currentPlayer.points >= 5) {
+                    if (currentPlayer.points >= board.checkpointSpaces.size()) {
                         System.out.println(currentPlayer.getName() + " has won");
 
                     }

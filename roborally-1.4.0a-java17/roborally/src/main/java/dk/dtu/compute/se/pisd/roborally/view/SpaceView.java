@@ -180,7 +180,7 @@ public class SpaceView extends StackPane implements ViewObserver {
      * @author Mirza Zia Beg (s235124)
      */
     public void drawCheckpoints () {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < space.board.checkpointSpaces.size(); i++) {
             if (space.board.checkpointSpaces.get(i).charAt(0) - '0' == space.x &&
                     space.board.checkpointSpaces.get(i).charAt(2) - '0' == space.y) {
                 File fimg = new File("roborally/images/" + (i + 1) + ".png");
