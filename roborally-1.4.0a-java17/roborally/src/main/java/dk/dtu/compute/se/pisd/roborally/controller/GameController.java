@@ -100,17 +100,34 @@ public class GameController {
         }
     }
 
+    /**
+     *
+     * @author sakariye, s235100
+     *
+     */
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
         moveForward(player);
         moveForward(player);
     }
 
+    /**
+     *
+     * @author sakariye, s235100
+     *
+     */
+
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         player.setHeading(heading.prev());
     }
+
+    /**
+     *
+     * @author sakariye, s235100
+     *
+     */
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
