@@ -131,9 +131,8 @@ public class GameController {
 
          ButtonType buttonLeft = new ButtonType("Turn Left");
          ButtonType buttonRight = new ButtonType("Turn Right");
-         ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-         alert.getButtonTypes().setAll(buttonLeft, buttonRight, buttonCancel);
+         alert.getButtonTypes().setAll(buttonLeft, buttonRight);
 
          Optional<ButtonType> result = alert.showAndWait();
          if (result.isPresent() && result.get() == buttonLeft) {
