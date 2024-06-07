@@ -304,16 +304,24 @@ public class Board extends Subject {
         int y = space.y;
         switch (heading) {
             case SOUTH:
-                y = (y + 1) % height;
+                if (y >= height - 1)
+                    return null;
+                y = y + 1;
                 break;
             case WEST:
-                x = (x + width - 1) % width;
+                if (x <= 0)
+                    return null;
+                x = x - 1;
                 break;
             case NORTH:
-                y = (y + height - 1) % height;
+                if (y <= 0)
+                    return null;
+                y = y - 1;
                 break;
             case EAST:
-                x = (x + 1) % width;
+                if (x >= width - 1)
+                    return null;
+                x = x + 1;
                 break;
         }
         Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
