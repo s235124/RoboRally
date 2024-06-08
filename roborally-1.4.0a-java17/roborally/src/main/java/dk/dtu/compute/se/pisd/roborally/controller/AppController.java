@@ -82,7 +82,6 @@ public class AppController implements Observer {
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
             Board board = new Board(8,8);
-            gameController = new GameController(board, false);
             int no = result.get();
 
             List<String> selectedColors = new ArrayList<>();
@@ -120,6 +119,8 @@ public class AppController implements Observer {
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(i % board.width, i));
             }
+
+            gameController = new GameController(board, false);
 
             // XXX: V2
             // board.setCurrentPlayer(board.getPlayer(0));
