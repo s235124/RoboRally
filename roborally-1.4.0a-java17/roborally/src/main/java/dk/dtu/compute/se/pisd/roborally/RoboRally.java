@@ -24,9 +24,7 @@ package dk.dtu.compute.se.pisd.roborally;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
-import dk.dtu.compute.se.pisd.roborally.view.LobbyView;
 import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
-import dk.dtu.compute.se.pisd.roborally.view.StartView;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -49,7 +47,7 @@ import java.util.Optional;
  */
 public class RoboRally extends Application {
 
-    public static final int MIN_APP_WIDTH = 600;
+    private static final int MIN_APP_WIDTH = 600;
 
     private Stage stage;
     private BorderPane boardRoot;
@@ -68,9 +66,9 @@ public class RoboRally extends Application {
         // create the primary scene with the a menu bar and a pane for
         // the board view (which initially is empty); it will be filled
         // when the user creates a new game or loads a game
-        StartView startView = new StartView(appController);
+        RoboRallyMenuBar menuBar = new RoboRallyMenuBar(appController);
         boardRoot = new BorderPane();
-        VBox vbox = new VBox(startView, boardRoot);
+        VBox vbox = new VBox(menuBar, boardRoot);
         vbox.setMinWidth(MIN_APP_WIDTH);
         Scene primaryScene = new Scene(vbox);
 
@@ -96,18 +94,6 @@ public class RoboRally extends Application {
         }
 
         stage.sizeToScene();
-    }
-
-    public void createHostView () {
-        stage.close();
-        stage = new Stage();
-
-        LobbyView lobbyView = new LobbyView(true);
-        Scene lobbyScene = new Scene(lobbyView);
-        stage.setScene(lobbyScene);
-        stage.setTitle("RoboRally");
-        stage.setMinWidth(MIN_APP_WIDTH);
-        stage.show();
     }
 
     /**

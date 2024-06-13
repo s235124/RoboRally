@@ -125,6 +125,7 @@ class GameControllerTest {
         gameController.moveForward(p1);
 
         Assertions.assertEquals(p1, board.getSpace(1,0).getPlayer(), "Player 1 should not have moved from (1,1), as there is wall");
+
     }
 
 }
