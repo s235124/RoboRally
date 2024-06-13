@@ -1,13 +1,13 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LobbyView extends VBox implements ViewObserver {
     private boolean isHost;
@@ -48,4 +48,6 @@ public class LobbyView extends VBox implements ViewObserver {
     public void updateView(Subject subject) {
 
     }
+
+    
 }

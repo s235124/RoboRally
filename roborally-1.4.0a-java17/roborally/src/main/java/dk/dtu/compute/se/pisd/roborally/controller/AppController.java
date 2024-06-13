@@ -21,24 +21,25 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
+
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
-
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoardPlayer;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.*;
 
 /**
  * ...
@@ -190,6 +191,10 @@ public class AppController implements Observer {
 
     public void createHostView () {
         roboRally.createHostView();
+    }
+
+    public void createJoinView(){
+        roboRally.createJoinView();
     }
 
     /**

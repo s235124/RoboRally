@@ -21,25 +21,24 @@
  */
 package dk.dtu.compute.se.pisd.roborally;
 
+import java.util.List;
+import java.util.Optional;
+
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
+import dk.dtu.compute.se.pisd.roborally.view.JoinView;
 import dk.dtu.compute.se.pisd.roborally.view.LobbyView;
-import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
 import dk.dtu.compute.se.pisd.roborally.view.StartView;
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * ...
@@ -109,6 +108,19 @@ public class RoboRally extends Application {
         stage.setMinWidth(MIN_APP_WIDTH);
         stage.show();
     }
+
+    public void createJoinView(){
+        stage.close();
+        stage = new Stage();
+
+        JoinView joinView = new JoinView(true);
+        Scene joinScene = new Scene(joinView);
+        stage.setScene(joinScene);
+        stage.setTitle("RoboRally");
+        stage.setMinWidth(MIN_APP_WIDTH);
+        stage.show();
+    }
+
 
     /**
      * Shows a dialogue box with a text field where the player inputs a name.
