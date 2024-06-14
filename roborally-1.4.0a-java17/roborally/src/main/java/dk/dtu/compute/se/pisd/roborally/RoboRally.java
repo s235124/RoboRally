@@ -26,10 +26,7 @@ import java.util.Optional;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.view.BoardView;
-import dk.dtu.compute.se.pisd.roborally.view.JoinView;
-import dk.dtu.compute.se.pisd.roborally.view.LobbyView;
-import dk.dtu.compute.se.pisd.roborally.view.StartView;
+import dk.dtu.compute.se.pisd.roborally.view.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
@@ -98,9 +95,6 @@ public class RoboRally extends Application {
     }
 
     public void createHostView () {
-        stage.close();
-        stage = new Stage();
-
         LobbyView lobbyView = new LobbyView(true);
         Scene lobbyScene = new Scene(lobbyView);
         stage.setScene(lobbyScene);
@@ -110,9 +104,6 @@ public class RoboRally extends Application {
     }
 
     public void createJoinView(){
-        stage.close();
-        stage = new Stage();
-
         JoinView joinView = new JoinView(true);
         Scene joinScene = new Scene(joinView);
         stage.setScene(joinScene);
@@ -121,6 +112,27 @@ public class RoboRally extends Application {
         stage.show();
     }
 
+    public void createMenuBarView () {
+        stage.close();
+
+        AppController appController = new AppController(this);
+
+        RoboRallyMenuBar menuBar = new RoboRallyMenuBar(appController);
+        boardRoot = new BorderPane();
+        VBox vbox = new VBox(menuBar, boardRoot);
+        vbox.setMinWidth(MIN_APP_WIDTH);
+        Scene primaryScene = new Scene(vbox);
+
+        stage.setScene(primaryScene);
+        stage.setTitle("RoboRally");
+        stage.setOnCloseRequest(
+                e -> {
+                    e.consume();
+                    appController.exit();} );
+        stage.setResizable(false);
+        stage.sizeToScene();
+        stage.show();
+    }
 
     /**
      * Shows a dialogue box with a text field where the player inputs a name.

@@ -36,8 +36,8 @@ public class LobbyView extends VBox implements ViewObserver {
         vbox.setSpacing(10);
 
 
-        for (String color : playerID) {
-            vbox.getChildren().add(new Label(color));
+        for (String ID : playerID) {
+            vbox.getChildren().add(new Label(ID));
         }
 
         vbox.getChildren().add(ready);

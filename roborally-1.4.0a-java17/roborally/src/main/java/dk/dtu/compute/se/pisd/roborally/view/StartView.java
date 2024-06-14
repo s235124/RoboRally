@@ -4,17 +4,24 @@ import static dk.dtu.compute.se.pisd.roborally.RoboRally.*;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class StartView extends HBox implements ViewObserver {
 
     AppController appController;
 
+    private BorderPane boardRoot;
+
     HBox hbox;
 
     Button host;
     Button join;
+    Button local;
 
     public StartView (AppController appController) {
         this.appController = appController;
@@ -35,10 +42,16 @@ public class StartView extends HBox implements ViewObserver {
             appController.createJoinView();
             System.out.println("created a join");
         });
+        local = new Button("Play locally");
+        local.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
+        local.setMinSize(150,100);
+        local.setOnAction( (e) -> {
+            appController.createMenuBarView();
+        });
 
         hbox = new HBox();
-        hbox.setSpacing(MIN_APP_WIDTH - 10);
-        hbox.getChildren().addAll(host, join);
+        hbox.setSpacing(200);
+        hbox.getChildren().addAll(host, join, local);
 
         this.getChildren().add(hbox);
     }

@@ -18,7 +18,7 @@ public class JoinView extends VBox implements ViewObserver {
     VBox vbox;
 
     public JoinView(boolean notHost){
-        this.notHost =  notHost;
+        this.notHost = notHost;
 
         places = new ArrayList<>();
 
