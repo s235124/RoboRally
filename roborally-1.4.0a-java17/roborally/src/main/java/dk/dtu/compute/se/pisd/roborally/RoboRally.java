@@ -140,11 +140,11 @@ public class RoboRally extends Application {
      * @return The name written by the user, or an empty string if cancelled.
      * @author Mirza Zia Beg (s235124) / Microsoft Copilot
      */
-    public String saveMenu () {
+    public String saveMenu (String gameOrBoard) {
         final String[] input = {""};
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Save game");
-        dialog.setHeaderText("Saving game:");
+        dialog.setTitle("Save " + gameOrBoard);
+        dialog.setHeaderText("Saving " + gameOrBoard + ":");
 
         TextField textField = new TextField();
         dialog.getDialogPane().setContent(textField);
@@ -173,10 +173,10 @@ public class RoboRally extends Application {
      * @return A choice of the choices, or null if it was cancelled.
      * @author Mirza Zia Beg (s235124)
      */
-    public String loadMenu (List<String> choices) {
+    public String loadMenu (List<String> choices, String gameOrBoard) {
         ChoiceDialog<String> cd = new ChoiceDialog<>(choices.get(0), choices);
-        cd.setTitle("Load game");
-        cd.setHeaderText("Loading game:");
+        cd.setTitle("Load " + gameOrBoard);
+        cd.setHeaderText("Loading " + gameOrBoard + ":");
 
         Optional<String> result = cd.showAndWait();
         if (result.isPresent()) {

@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import org.jetbrains.annotations.NotNull;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
@@ -66,23 +67,98 @@ public class AppController implements Observer {
      * @author Nico Laursen (s23
      */
     public void newGame() {
+
+        // XXX the board should eventually be created programmatically or loaded from a file
+        //     here we just create an empty board with the required number of players.
+        Board board = new Board(8,8);
+
+
+        choosePlayerAndColors(board);
+
+        // Since this is a new game, the board will be loaded with default checkpoints, walls and holes
+        // by using this constructor (which is different from the constructor with only the board as arg).
+        gameController = new GameController(board, false);
+
+        // XXX: V2
+        // board.setCurrentPlayer(board.getPlayer(0));
+        gameController.startProgrammingPhase();
+
+        roboRally.createBoardView(gameController);
+    }
+
+    public void saveBoard () {
+        String fileName = roboRally.saveMenu("Board");
+        if (!fileName.isEmpty())
+            LoadBoard.saveBoard(gameController.board, fileName);
+    }
+
+    public void loadBoard () {
+        ClassLoader classLoader = LoadBoardPlayer.class.getClassLoader();
+
+        String path = classLoader.getResource("boards").getPath();
+
+        StringBuilder actualPath = new StringBuilder();
+
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+            if (c == '%') {
+                i += 2;
+                c = ' ';
+            }
+            actualPath.append(c);
+        }
+
+        File directory = new File(actualPath.toString());
+        File[] files = directory.listFiles();
+        List<String> fileNames = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    int dotIndex = fileName.lastIndexOf('.');
+                    if (dotIndex > 0) {
+                        fileName = fileName.substring(0, dotIndex);
+                    }
+                    fileNames.add(fileName);
+                }
+            }
+        }
+
+        System.out.println("File names: " + fileNames);
+
+        String boardName = roboRally.loadMenu(fileNames, "Board");
+        if (boardName != null)
+            this.gameController = new GameController(LoadBoard.loadBoard(boardName));
+    }
+
+    public void loadBoardWithNewGame () {
+        loadBoard();
+
+        if (this.gameController == null) return;
+
+        choosePlayerAndColors(this.gameController.board);
+        this.gameController.startProgrammingPhase();
+        roboRally.createBoardView(this.gameController);
+    }
+
+    public void choosePlayerAndColors (Board board) {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
         dialog.setHeaderText("Select number of players");
         Optional<Integer> result = dialog.showAndWait();
 
         if (result.isPresent()) {
-            if (gameController != null) {
-                // The UI should not allow this, but in case this happens anyway.
-                // give the user the option to save the game or abort this operation!
-                if (!stopGame()) {
-                    return;
-                }
-            }
+            // Since the UI shouldn't allow this, we trust that it won't happen
+            // (but its left here just in case)
+//            if (this.gameController != null) {
+//                // The UI should not allow this, but in case this happens anyway.
+//                // give the user the option to save the game or abort this operation!
+//                if (!stopGame()) {
+//                    return;
+//                }
+//            }
 
-            // XXX the board should eventually be created programmatically or loaded from a file
-            //     here we just create an empty board with the required number of players.
-            Board board = new Board(8,8);
             int no = result.get();
 
             List<String> selectedColors = new ArrayList<>();
@@ -120,15 +196,8 @@ public class AppController implements Observer {
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(i % board.width, i));
             }
-
-            gameController = new GameController(board, false);
-
-            // XXX: V2
-            // board.setCurrentPlayer(board.getPlayer(0));
-            gameController.startProgrammingPhase();
-
-            roboRally.createBoardView(gameController);
         }
+//        this.gameController = new GameController(board);
     }
 
     /**
@@ -136,10 +205,10 @@ public class AppController implements Observer {
      * @author Mirza Zia Beg (s235124)
      */
     public void saveGame() {
-        String fileName = roboRally.saveMenu();
+        String fileName = roboRally.saveMenu("Game");
 
         if (!fileName.isEmpty())
-            LoadBoardPlayer.saveBoardPlayer(gameController.board, fileName);
+            LoadBoardPlayer.saveBoardPlayer(this.gameController.board, fileName);
     }
 
     /**
@@ -150,7 +219,7 @@ public class AppController implements Observer {
     public void loadGame() {
         ClassLoader classLoader = LoadBoardPlayer.class.getClassLoader();
 
-        String path = classLoader.getResource("boards").getPath();
+        String path = classLoader.getResource("games").getPath();
 
         StringBuilder actualPath = new StringBuilder();
 
@@ -182,7 +251,7 @@ public class AppController implements Observer {
 
         System.out.println("File names: " + fileNames);
 
-        String boardName = roboRally.loadMenu(fileNames);
+        String boardName = roboRally.loadMenu(fileNames, "Game");
         if (boardName != null)
             this.gameController = new GameController(LoadBoardPlayer.loadBoardPlayer(boardName));
 

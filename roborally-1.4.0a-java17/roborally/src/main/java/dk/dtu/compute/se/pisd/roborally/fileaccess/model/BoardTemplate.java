@@ -50,7 +50,7 @@ public class BoardTemplate {
 
     public List<String> holes = new ArrayList<>();
 
-    public List<String> checkpointSpaces;
+    public List<String> checkpointSpaces = new ArrayList<>();
 
     public List<PlayerTemplate> players = new ArrayList<>();
 

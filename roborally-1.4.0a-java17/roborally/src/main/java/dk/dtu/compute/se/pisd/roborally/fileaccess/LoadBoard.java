@@ -70,6 +70,8 @@ public class LoadBoard {
 			BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
 
 			result = new Board(template.width, template.height);
+            result.checkpointSpaces.addAll(template.checkpointSpaces);
+
 			for (SpaceTemplate spaceTemplate: template.spaces) {
 			    Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
 			    if (space != null) {
@@ -77,6 +79,13 @@ public class LoadBoard {
                     space.getWalls().addAll(spaceTemplate.walls);
                 }
             }
+
+            for (int i = 0; i < template.holes.size(); i++) {
+                int x = template.holes.get(i).charAt(0) - '0';
+                int y = template.holes.get(i).charAt(2) - '0';
+                result.addHole(x,y);
+            }
+
 			reader.close();
 			return result;
 		} catch (IOException e1) {
@@ -100,8 +109,8 @@ public class LoadBoard {
         template.width = board.width;
         template.height = board.height;
 
-        for (int i=0; i<board.width; i++) {
-            for (int j=0; j<board.height; j++) {
+        for (int i = 0; i < board.width; i++) {
+            for (int j = 0; j < board.height; j++) {
                 Space space = board.getSpace(i,j);
                 if (!space.getWalls().isEmpty() || !space.getActions().isEmpty()) {
                     SpaceTemplate spaceTemplate = new SpaceTemplate();
@@ -110,6 +119,18 @@ public class LoadBoard {
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
                     template.spaces.add(spaceTemplate);
+
+                    continue;
+                }
+                for (int k = 0; k < board.checkpointSpaces.size(); k++) {
+                    int x = board.checkpointSpaces.get(k).charAt(0) - '0';
+                    int y = board.checkpointSpaces.get(k).charAt(2) - '0';
+                    if (space.x == x && space.y == y) {
+                        template.checkpointSpaces.add(board.checkpointSpaces.get(k));
+                    }
+                }
+                if (board.holes.contains(space)) {
+                    template.holes.add(space.x + "," + space.y);
                 }
             }
         }

@@ -28,26 +28,19 @@ public class StartView extends HBox implements ViewObserver {
 
         host = new Button("Host a game");
         host.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
-        host.setOnAction( (e) -> {
-            System.out.println("creating");
-            appController.createHostView();
-            System.out.println("created");
-        });
+        host.setOnAction(e -> {
+            appController.loadBoard();
+            appController.createHostView();});
+
         host.setMinSize(150,100);
         join = new Button("Join a game");
         join.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
         join.setMinSize(150,100);
-        join.setOnAction( (e) -> {
-            System.out.println("Join a game");
-            appController.createJoinView();
-            System.out.println("created a join");
-        });
+        join.setOnAction(e -> appController.createJoinView());
         local = new Button("Play locally");
         local.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
         local.setMinSize(150,100);
-        local.setOnAction( (e) -> {
-            appController.createMenuBarView();
-        });
+        local.setOnAction(e -> appController.createMenuBarView());
 
         hbox = new HBox();
         hbox.setSpacing(200);

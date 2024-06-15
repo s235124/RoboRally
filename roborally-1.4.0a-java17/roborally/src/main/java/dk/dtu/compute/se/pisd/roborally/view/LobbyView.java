@@ -27,9 +27,7 @@ public class LobbyView extends VBox implements ViewObserver {
         playerID.add("green");
 
         ready = new Button("Ready");
-        ready.setOnAction(e -> {
-            System.out.println("Readying up");
-        });
+        ready.setOnAction(e -> System.out.println("Readying up"));
 
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);

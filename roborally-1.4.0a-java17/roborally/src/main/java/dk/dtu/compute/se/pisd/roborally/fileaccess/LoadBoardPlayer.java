@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class LoadBoardPlayer {
-    private static final String BOARDSFOLDER = "boards";
+    private static final String BOARDSFOLDER = "games";
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String JSON_EXT = "json";
 
@@ -68,7 +68,6 @@ public class LoadBoardPlayer {
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
                     space.getWalls().addAll(spaceTemplate.walls);
-
                 }
             }
 
@@ -139,7 +138,6 @@ public class LoadBoardPlayer {
         template.step = board.getStep();
         template.stepMode = board.isStepMode();
         template.phase = board.getPhase();
-        template.checkpointSpaces = new ArrayList<>();
 
         for (int i = 0; i < board.width; i++) {
             for (int j = 0; j < board.height; j++) {
