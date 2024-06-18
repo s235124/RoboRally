@@ -92,6 +92,31 @@ public class AppController implements Observer {
             LoadBoard.saveBoard(gameController.board, fileName);
     }
 
+    public void loadBoardOnline () {
+        loadBoard();
+
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialog.setTitle("Player number");
+        dialog.setHeaderText("Select number of players");
+        Optional<Integer> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            gameController.board.maxPlayers = result.get();
+        }
+
+        try {
+            HttpController.addLobbyToServer(gameController.board);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     public void loadBoard () {
         ClassLoader classLoader = LoadBoardPlayer.class.getClassLoader();
 

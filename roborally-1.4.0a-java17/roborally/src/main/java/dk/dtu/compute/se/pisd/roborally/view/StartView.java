@@ -29,7 +29,7 @@ public class StartView extends HBox implements ViewObserver {
         host = new Button("Host a game");
         host.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
         host.setOnAction(e -> {
-            appController.loadBoard();
+            appController.loadBoardOnline();
             appController.createHostView();});
 
         host.setMinSize(150,100);

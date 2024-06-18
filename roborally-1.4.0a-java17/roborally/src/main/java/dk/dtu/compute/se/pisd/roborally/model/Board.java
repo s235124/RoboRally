@@ -47,6 +47,8 @@ public class Board extends Subject {
 
     private Integer gameId;
 
+    public int maxPlayers;
+
     private final Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
