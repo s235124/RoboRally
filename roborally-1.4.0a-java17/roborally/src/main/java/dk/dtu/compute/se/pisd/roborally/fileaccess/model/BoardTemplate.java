@@ -38,6 +38,8 @@ public class BoardTemplate {
     public int width;
     public int height;
 
+    public int map;
+
     public Integer gameID;
 
     public Phase phase;

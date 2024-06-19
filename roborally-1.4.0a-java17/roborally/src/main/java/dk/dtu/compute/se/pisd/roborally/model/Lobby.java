@@ -9,7 +9,7 @@ public class Lobby {
     int maxPlayerCount;
     int currentPlayerCount;
 
-    int map;
+    Integer map;
 
     boolean visibility;
 
@@ -77,6 +77,10 @@ public class Lobby {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void addPlayer (Player player) {
+        players.add(player);
     }
 
     public void setPlayers(List<Player> players) {

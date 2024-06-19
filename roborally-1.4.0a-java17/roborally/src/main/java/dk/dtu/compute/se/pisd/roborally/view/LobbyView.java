@@ -10,11 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class LobbyView extends VBox implements ViewObserver {
-    private boolean isHost;
+    boolean isHost;
 
     List<String> playerID;
 
     Button ready;
+
+    Label waiting;
 
     VBox vbox;
 
@@ -26,9 +28,13 @@ public class LobbyView extends VBox implements ViewObserver {
         playerID.add("red");
         playerID.add("green");
 
-        ready = new Button("Ready");
-        ready.setOnAction(e -> System.out.println("Readying up"));
-
+        if (isHost) {
+            ready = new Button("Ready");
+            ready.setOnAction(e -> System.out.println("Readying up"));
+        }
+        else {
+            waiting = new Label("Waiting...");
+        }
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(10);
@@ -38,7 +44,7 @@ public class LobbyView extends VBox implements ViewObserver {
             vbox.getChildren().add(new Label(ID));
         }
 
-        vbox.getChildren().add(ready);
+        vbox.getChildren().add(isHost ? ready : waiting);
         this.getChildren().add(vbox);
     }
 

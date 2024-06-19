@@ -49,6 +49,8 @@ public class Board extends Subject {
 
     public int maxPlayers;
 
+    public int map;
+
     private final Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
@@ -70,6 +72,7 @@ public class Board extends Subject {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
+        map = 0;
         spaces = new Space[width][height];
         holes = new ArrayList<>();
         for (int x = 0; x < width; x++) {

@@ -47,6 +47,8 @@ public class Player extends Subject {
     private String name;
     private String color;
 
+    public String cardStr;
+
     private Space space;
     private Heading heading = SOUTH;
 
@@ -59,6 +61,7 @@ public class Player extends Subject {
         this.board = board;
         this.name = name;
         this.color = color;
+        this.cardStr = "";
 
         this.space = null;
 

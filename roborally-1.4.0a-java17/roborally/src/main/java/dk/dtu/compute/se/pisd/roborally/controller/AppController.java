@@ -22,12 +22,14 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
+import dk.dtu.compute.se.pisd.roborally.model.Lobby;
 import org.jetbrains.annotations.NotNull;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Observer;
@@ -55,7 +57,7 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-    private GameController gameController;
+    public GameController gameController;
 
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
@@ -92,7 +94,14 @@ public class AppController implements Observer {
             LoadBoard.saveBoard(gameController.board, fileName);
     }
 
-    public void loadBoardOnline () {
+    public void loadBoardClient (Lobby lobby) {
+        String boardName = mapCodeToBoard(lobby.getMap());
+
+        if (boardName != null)
+            this.gameController = new GameController(LoadBoard.loadBoard(boardName));
+    }
+
+    public void loadBoardHost () {
         loadBoard();
 
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
@@ -103,6 +112,8 @@ public class AppController implements Observer {
         if (result.isPresent()) {
             gameController.board.maxPlayers = result.get();
         }
+
+        chooseColor(gameController.board);
 
         try {
             HttpController.addLobbyToServer(gameController.board);
@@ -165,6 +176,42 @@ public class AppController implements Observer {
         choosePlayerAndColors(this.gameController.board);
         this.gameController.startProgrammingPhase();
         roboRally.createBoardView(this.gameController);
+    }
+
+    public void chooseColor (Board board) {
+        List<String> selectedColors = new ArrayList<>();
+
+        //v
+        List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
+        remainingColors.removeAll(selectedColors);
+        Player player = new Player(board, PLAYER_COLORS.get(0), "Player " + (board.getPlayersNumber()));
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(remainingColors.get(0), remainingColors);
+        dialog.setTitle("Color Selection");
+        dialog.setHeaderText("Player: Choose a color");
+        dialog.setContentText("Color:");
+
+        Optional<String> result2 = dialog.showAndWait();
+        if (result2.isPresent()) {
+            String selectedColor = result2.get();
+            selectedColors.add(selectedColor);
+            // Use the selected color to initialize the player
+            player.setColor(selectedColor);
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Color Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Player has chosen " + selectedColor + " as their color.");
+            alert.showAndWait();
+        } else {
+            // User closed the dialog without selecting a color
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Color Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("No color was selected for Player " + (board.getPlayersNumber()) + ". Exiting...");
+            alert.showAndWait();
+            return;
+        }
+        System.out.println(player.getColor());
+        board.addPlayer(player);
     }
 
     public void choosePlayerAndColors (Board board) {
@@ -288,11 +335,32 @@ public class AppController implements Observer {
     }
 
     public void createJoinView(){
-        roboRally.createJoinView();
+        roboRally.createJoinView(this);
     }
 
     public void createMenuBarView () {
         roboRally.createMenuBarView();
+    }
+
+    public void createLobbyView(Integer lobbyId){
+        Lobby lobby;
+        try {
+            lobby = HttpController.getLobbyById(lobbyId);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        roboRally.createClientView();
+    }
+
+    public String mapCodeToBoard (int mapCode) {
+        switch (mapCode) {
+            case 0:
+                return "defaultboard";
+            case 1:
+                return "ExampleBoard";
+        }
+        return null;
     }
 
     /**

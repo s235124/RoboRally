@@ -103,8 +103,17 @@ public class RoboRally extends Application {
         stage.show();
     }
 
-    public void createJoinView(){
-        JoinView joinView = new JoinView(true);
+    public void createClientView () {
+        LobbyView lobbyView = new LobbyView(false);
+        Scene lobbyScene = new Scene(lobbyView);
+        stage.setScene(lobbyScene);
+        stage.setTitle("RoboRally");
+        stage.setMinWidth(MIN_APP_WIDTH);
+        stage.show();
+    }
+
+    public void createJoinView(AppController appController){
+        JoinView joinView = new JoinView(appController, true);
         Scene joinScene = new Scene(joinView);
         stage.setScene(joinScene);
         stage.setTitle("RoboRally");

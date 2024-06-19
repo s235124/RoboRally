@@ -70,6 +70,7 @@ public class LoadBoard {
 			BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
 
 			result = new Board(template.width, template.height);
+            result.map = template.map;
             result.checkpointSpaces.addAll(template.checkpointSpaces);
 
 			for (SpaceTemplate spaceTemplate: template.spaces) {
