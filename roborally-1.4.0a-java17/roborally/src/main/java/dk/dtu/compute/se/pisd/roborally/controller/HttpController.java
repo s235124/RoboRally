@@ -1,11 +1,5 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Lobby;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,6 +9,13 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Lobby;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 public class HttpController {
 
@@ -90,18 +91,23 @@ public class HttpController {
                 .build();
         CompletableFuture<HttpResponse<String>> getResponse =
                 httpClient.sendAsync(getRequest, HttpResponse.BodyHandlers.ofString());
+
         String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+        System.out.println("GET Response: " + getResult);
 
         Gson gson = new Gson();
         Lobby newLobby = gson.fromJson(getResult, Lobby.class);
+
         if (newLobby.getPlayers() != null) {
-            if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
-                return false;
+                if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
+                        System.out.println("Lobby is full");
+                        return false;
         }
 
         newLobby.addPlayer(player);
 
         String json = gson.toJson(newLobby);
+        System.out.println("Updated Lobby JSON: " + json);
 
         HttpRequest putRequest = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
@@ -125,6 +131,7 @@ public class HttpController {
         CompletableFuture<HttpResponse<String>> response =
                 httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
         String result = response.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+        System.out.println("PUT Response: " + result);
         return result;
     }
 
