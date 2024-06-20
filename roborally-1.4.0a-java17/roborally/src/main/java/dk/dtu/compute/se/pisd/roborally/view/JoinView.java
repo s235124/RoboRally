@@ -1,7 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
@@ -17,71 +16,83 @@ import javafx.scene.layout.VBox;
 public class JoinView extends VBox implements ViewObserver {
 
     private boolean notHost;
+    private AppController appController;
+    private List<Button> places;
+    private Button refresh;
+    private VBox vbox;
 
-    AppController appcontroller;
-
-    List<Button> places;
-    private Button Refresh;
-
-    VBox vbox;
-
-    public JoinView(AppController appController, boolean notHost){
-        this.appcontroller = appController;
+    public JoinView(AppController appController, boolean notHost) {
+        this.appController = appController;
         this.notHost = notHost;
 
         places = new ArrayList<>();
-
-        List<Lobby> list = new ArrayList<>();
-        try {
-            List<Lobby> f = HttpController.getLobbies();
-            list.addAll(f);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            places.add(new Button(list.get(i).getLobbyID() + ", " + list.get(i).getCurrentPlayerCount() + "/" + list.get(i).getMaxPlayerCount()));
-            int finalI = i;
-
-            places.get(i).setOnAction(e -> {
-                appcontroller.loadBoardClient(list.get(finalI));
-                Board gameBoard = appcontroller.gameController.board;
-
-                appcontroller.chooseColor(gameBoard);
-
-                try {
-                    HttpController.addPlayerToLobby(finalI, gameBoard.getPlayer(gameBoard.getPlayersNumber() - 1));
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                appController.createLobbyView(list.get(finalI).getLobbyID());
-            });
-        }
-
-        Refresh = new Button("Refresh");
-        Refresh.setOnAction(e -> {
-            System.out.println("refreshing the lobby");
-        });
-
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(10);
 
-        
-        vbox.getChildren().addAll(places);
-        vbox.getChildren().add(Refresh);
+        refreshLobbyList();
+
+        refresh = new Button("Refresh");
+        refresh.setOnAction(e -> refreshLobbyList());
+
+        vbox.getChildren().add(refresh);
         this.getChildren().add(vbox);
     }
 
+    private void refreshLobbyList() {
+        List<Lobby> lobbies = new ArrayList<>();
+        try {
+            List<Lobby> fetchedLobbies = HttpController.getLobbies();
+            lobbies.addAll(fetchedLobbies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        places.clear();
+        vbox.getChildren().clear();
+        vbox.getChildren().add(refresh); // Keep the refresh button
 
+        for (Lobby lobby : lobbies) {
+            if (lobby != null) {
+                try {
+                    Button lobbyButton = new Button(lobby.getLobbyID() + ", " + lobby.getCurrentPlayerCount() + "/" + lobby.getMaxPlayerCount());
+                    lobbyButton.setOnAction(e -> {
+                        appController.loadBoardClient(lobby);
+                        Board gameBoard = appController.gameController.board;
+
+                        appController.chooseColor(gameBoard);
+
+                        try {
+                            Player newPlayer = new Player(); // Initialiser en ny Player
+                            newPlayer.setColor(getAccessibleHelp());
+                            HttpController.addPlayerToLobby(lobby.getLobbyID(), newPlayer);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            throw new RuntimeException(ex);
+                        }
+
+                        appController.createLobbyView(lobby.getLobbyID());
+                    });
+
+                    places.add(lobbyButton);
+                } catch (Exception e) {
+                    System.err.println("Error creating button for lobby: " + lobby.getLobbyID());
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        try {
+            vbox.getChildren().addAll(places);
+        } catch (Exception e) {
+            System.err.println("Error adding buttons to VBox.");
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void updateView(Subject subject) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateView'");
     }
-    
 }

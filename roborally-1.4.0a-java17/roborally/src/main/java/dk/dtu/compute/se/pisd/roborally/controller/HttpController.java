@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -97,6 +98,17 @@ public class HttpController {
 
         Gson gson = new Gson();
         Lobby newLobby = gson.fromJson(getResult, Lobby.class);
+
+        // Check if newLobby is null
+    if (newLobby == null) {
+        System.out.println("Lobby not found");
+        return false;
+    }
+
+    // Initialize players list if it is null
+    if (newLobby.getPlayers() == null) {
+        newLobby.setPlayers(new ArrayList<>());
+    }
 
         if (newLobby.getPlayers() != null) {
                 if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
