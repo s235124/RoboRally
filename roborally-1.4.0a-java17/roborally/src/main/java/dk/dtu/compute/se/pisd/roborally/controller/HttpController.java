@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-import dk.dtu.compute.se.pisd.roborally.fileaccess.Adapter;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Lobby;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
@@ -189,6 +188,54 @@ public class HttpController {
         }
     }
 
+    public static List<ServerPlayer> getPlayersFromLobbyID(int lobbyID) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/getplayers"))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> response =
+                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        String result = response.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+
+        System.out.println(result);
+
+        Gson gson = new Gson();
+        Type ServerPlayerListType = new TypeToken<List<ServerPlayer>>(){}.getType();
+        List<ServerPlayer> players = gson.fromJson(result, ServerPlayerListType);
+        System.out.println(players);
+        return players;
+    }
+
+    public static boolean isReady (int lobbyID) throws Exception {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/isready"))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> getResponse =
+                httpClient.sendAsync(getRequest, HttpResponse.BodyHandlers.ofString());
+        String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+
+        return getResult.equals("true");
+    }
+
+    public static boolean readying (int lobbyID) throws Exception {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/ready"))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> getResponse =
+                httpClient.sendAsync(getRequest, HttpResponse.BodyHandlers.ofString());
+        String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+
+        return getResult.equals("true");
+    }
 
     public static List<String> getPlayerIdFromLobby (int lobbyID) throws Exception {
         HttpRequest getRequest = HttpRequest.newBuilder()

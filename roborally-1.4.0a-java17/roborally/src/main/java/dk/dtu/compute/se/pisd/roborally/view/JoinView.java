@@ -57,7 +57,8 @@ public class JoinView extends VBox implements ViewObserver {
                 appcontroller.chooseColor(gameBoard);
 
                 try {
-                    HttpController.addPlayerToLobby(list.get(finalI).getLobbyID(), gameBoard.getPlayer(gameBoard.getPlayersNumber() - 1));
+                    if (!HttpController.addPlayerToLobby(list.get(finalI).getLobbyID(), gameBoard.getPlayer(gameBoard.getPlayersNumber() - 1)))
+                        return;
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }

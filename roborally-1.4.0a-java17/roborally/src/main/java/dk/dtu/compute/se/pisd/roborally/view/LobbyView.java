@@ -2,10 +2,14 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
-import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.controller.HttpController;
+import dk.dtu.compute.se.pisd.roborally.controller.ThreadController;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,7 +40,34 @@ public class LobbyView extends VBox implements ViewObserver {
         if (isHost) {
             ready = new Button("Ready");
             ready.setOnAction(e ->  {
+                try {
+                    if (!HttpController.readying(this.appController.currentLobbyID))
+                        return;
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 // Send signal to server for the other players
+
+                // Fetch other players in the lobby
+                List<ServerPlayer> players;
+
+                try {
+                    players = HttpController.getPlayersFromLobbyID(this.appController.currentLobbyID);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                this.appController.gameController.board.clearPlayers();
+
+                AtomicInteger i = new AtomicInteger();
+                players.forEach(player -> {
+                    Player player1 = new Player(this.appController.gameController.board, player.getColor(), player.getPlayerName());
+                    player1.cardStr = player.getCardStr();
+                    player1.setSpace(this.appController.gameController.board.getSpace(i.get(), i.get()));
+                    this.appController.gameController.board.addPlayer(player1);
+                    i.getAndIncrement();
+                });
 
                 this.appController.gameController.startProgrammingPhase();
                 this.appController.createBoardView(this.appController.gameController);
@@ -56,6 +87,12 @@ public class LobbyView extends VBox implements ViewObserver {
 
         vbox.getChildren().add(isHost ? ready : waiting);
         this.getChildren().add(vbox);
+
+        if (!isHost) {
+            ThreadController threadController = new ThreadController(this.appController.currentLobbyID);
+            Thread thread = new Thread(threadController);
+            thread.start();
+        }
     }
 
     @Override

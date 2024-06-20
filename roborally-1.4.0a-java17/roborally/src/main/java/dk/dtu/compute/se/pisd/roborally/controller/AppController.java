@@ -57,6 +57,8 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
+    public int currentLobbyID;
+
     public GameController gameController;
 
     public AppController(@NotNull RoboRally roboRally) {
@@ -99,6 +101,7 @@ public class AppController implements Observer {
 
         if (boardName != null)
             this.gameController = new GameController(LoadBoard.loadBoard(boardName));
+        this.currentLobbyID = lobby.getLobbyID();
     }
 
     public void loadBoardHost () {
@@ -117,6 +120,7 @@ public class AppController implements Observer {
 
         try {
             HttpController.addLobbyToServer(gameController.board);
+            this.currentLobbyID = HttpController.getLobbyCount();
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -331,7 +335,8 @@ public class AppController implements Observer {
     }
 
     public void createBoardView (GameController gameController) {
-        roboRally.createBoardView(this.gameController);
+
+        roboRally.createBoardView(gameController);
     }
 
     public void createHostView () {

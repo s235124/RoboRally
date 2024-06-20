@@ -166,6 +166,10 @@ public class Board extends Subject {
         }
     }
 
+    public void clearPlayers () {
+        this.players.clear();
+    }
+
     public Integer getGameId() {
         return gameId;
     }
