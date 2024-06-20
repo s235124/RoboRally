@@ -385,6 +385,10 @@ public class AppController implements Observer {
         return false;
     }
 
+    public void increaseStageSize () {
+        roboRally.increaseStageSize();
+    }
+
     public void exit() {
         if (gameController != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);

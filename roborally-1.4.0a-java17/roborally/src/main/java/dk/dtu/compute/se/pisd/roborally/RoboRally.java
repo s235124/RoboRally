@@ -194,6 +194,11 @@ public class RoboRally extends Application {
         return null;
     }
 
+    public void increaseStageSize () {
+        stage.sizeToScene();
+        stage.setWidth(MIN_APP_WIDTH);
+    }
+
     @Override
     public void stop() throws Exception {
         super.stop();

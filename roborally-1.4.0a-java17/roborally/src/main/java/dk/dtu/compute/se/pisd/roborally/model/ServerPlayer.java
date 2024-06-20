@@ -16,7 +16,7 @@ public class ServerPlayer {
         this.playerName = playerName;
         this.cardStr = cardStr;
         this.color = color;
-       this.currentLobby = currentLobby;
+        this.currentLobby = currentLobby;
     }
 
     public Integer getId() {
