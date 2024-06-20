@@ -8,7 +8,7 @@ import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
 
 import java.lang.reflect.Type;
 
-class PlayerSerializer implements JsonSerializer<ServerPlayer> {
+public class ServerPlayerSerializer implements JsonSerializer<ServerPlayer> {
     @Override
     public JsonElement serialize(ServerPlayer player, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();

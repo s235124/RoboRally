@@ -184,7 +184,7 @@ public class AppController implements Observer {
         //v
         List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
         remainingColors.removeAll(selectedColors);
-        Player player = new Player(board, PLAYER_COLORS.get(0), "Player " + (board.getPlayersNumber()));
+        Player player = new Player(board, PLAYER_COLORS.get(0), "Player " + (board.getPlayersNumber() + 1));
         ChoiceDialog<String> dialog = new ChoiceDialog<>(remainingColors.get(0), remainingColors);
         dialog.setTitle("Color Selection");
         dialog.setHeaderText("Player: Choose a color");
@@ -206,7 +206,7 @@ public class AppController implements Observer {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("No Color Selected");
             alert.setHeaderText(null);
-            alert.setContentText("No color was selected for Player " + (board.getPlayersNumber()) + ". Exiting...");
+            alert.setContentText("No color was selected for Player " + (board.getPlayersNumber() + 1) + ". Exiting...");
             alert.showAndWait();
             return;
         }
@@ -330,8 +330,12 @@ public class AppController implements Observer {
         roboRally.createBoardView(this.gameController);
     }
 
+    public void createBoardView (GameController gameController) {
+        roboRally.createBoardView(this.gameController);
+    }
+
     public void createHostView () {
-        roboRally.createHostView();
+        roboRally.createHostView(this);
     }
 
     public void createJoinView(){
@@ -350,7 +354,7 @@ public class AppController implements Observer {
         catch (Exception e) {
             e.printStackTrace();
         }
-        roboRally.createClientView();
+        roboRally.createClientView(this);
     }
 
     public String mapCodeToBoard (int mapCode) {

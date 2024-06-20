@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +13,8 @@ import javafx.scene.layout.VBox;
 
 public class LobbyView extends VBox implements ViewObserver {
     boolean isHost;
+
+    AppController appController;
 
     List<String> playerID;
 
@@ -20,8 +24,9 @@ public class LobbyView extends VBox implements ViewObserver {
 
     VBox vbox;
 
-    public LobbyView(boolean isHost) {
+    public LobbyView(AppController appController, boolean isHost) {
         this.isHost = isHost;
+        this.appController = appController;
         playerID = new ArrayList<>();
 
         playerID.add("blue");
@@ -30,10 +35,15 @@ public class LobbyView extends VBox implements ViewObserver {
 
         if (isHost) {
             ready = new Button("Ready");
-            ready.setOnAction(e -> System.out.println("Readying up"));
+            ready.setOnAction(e ->  {
+                // Send signal to server for the other players
+
+                this.appController.gameController.startProgrammingPhase();
+                this.appController.createBoardView(this.appController.gameController);
+            });
         }
         else {
-            waiting = new Label("Waiting...");
+            waiting = new Label("Waiting for host...");
         }
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);

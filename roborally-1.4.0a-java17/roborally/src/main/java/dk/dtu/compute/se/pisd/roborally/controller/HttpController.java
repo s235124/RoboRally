@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+import dk.dtu.compute.se.pisd.roborally.fileaccess.Adapter;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Lobby;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
@@ -28,9 +29,14 @@ public class HttpController {
 
     public static String addLobbyToServer (Board board) throws Exception {
         Lobby lobby = new Lobby(board.maxPlayers, board.map, true, false);
-        Gson gson = new Gson();
+        Player player = board.getPlayer(0);
+        ServerPlayer sPlayer = new ServerPlayer(player.getName(), player.cardStr, player.getColor(), lobby);
+        lobby.addPlayer(sPlayer);
 
+        Gson gson = new GsonBuilder().registerTypeAdapter(ServerPlayer.class, new ServerPlayerSerializer()).create();
         String json = gson.toJson(lobby);
+
+        System.out.println(json);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -40,6 +46,9 @@ public class HttpController {
                 .build();
         CompletableFuture<HttpResponse<String>> response =
                 httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+
+        addPlayerToLobby(getLobbyCount() + 1, player);
+
         return response.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
     }
 
@@ -85,21 +94,20 @@ public class HttpController {
     }
 
     public static boolean addPlayerToLobby (int lobbyID, Player player) throws Exception {
-        
-
         Lobby newLobby = getLobbyById(lobbyID);
 
         if (newLobby.getPlayers() == null) {
-                newLobby.setPlayers(new ArrayList<>());
-             }
+            newLobby.setPlayers(new ArrayList<>());
+        }
      
         if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
-                return false;
+            return false;
 
         
-            ServerPlayer sPlayer = new ServerPlayer(player.getName(), player.cardStr, player.getColor(),newLobby);
-        Gson gson = new Gson();
-        String json = gson.toJson(sPlayer);
+        ServerPlayer sPlayer = new ServerPlayer(player.getName(), player.cardStr, player.getColor(), newLobby);
+        Gson gson1 = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(ServerPlayer.class, new ServerPlayerSerializer()).create();
+        String json = gson1.toJson(sPlayer);
 
         System.out.println(json);
 
@@ -114,10 +122,6 @@ public class HttpController {
         String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
 
         System.out.println(getResult);
-
-
-        if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
-            return false;
 
         newLobby.addPlayer(sPlayer);
 
@@ -134,6 +138,18 @@ public class HttpController {
         String putResult = putResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
         System.out.println(putResult);
         System.out.println(json1);
+
+        HttpRequest getRequest2 = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/inc"))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> putResponse2 =
+                httpClient.sendAsync(getRequest2, HttpResponse.BodyHandlers.ofString());
+        String putResult2 = putResponse2.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+        System.out.println(putResult2);
+
         return true;
     }
 
@@ -147,8 +163,32 @@ public class HttpController {
         CompletableFuture<HttpResponse<String>> getResponse =
                 httpClient.sendAsync(getRequest, HttpResponse.BodyHandlers.ofString());
         String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
-        return 0;
+        try {
+            return Integer.parseInt(getResult);
+        }
+        catch (Exception e) {
+            return 0;
+        }
     }
+
+    public static int getLobbyCount () throws Exception {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("http://localhost:8080/lobbies/NoL"))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> getResponse =
+                httpClient.sendAsync(getRequest, HttpResponse.BodyHandlers.ofString());
+        String getResult = getResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+        try {
+            return Integer.parseInt(getResult);
+        }
+        catch (Exception e) {
+            return 0;
+        }
+    }
+
 
     public static List<String> getPlayerIdFromLobby (int lobbyID) throws Exception {
         HttpRequest getRequest = HttpRequest.newBuilder()
@@ -244,4 +284,5 @@ public class HttpController {
 //        }
 //        return result != null;
 //    }
+
 }

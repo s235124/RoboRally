@@ -94,8 +94,8 @@ public class RoboRally extends Application {
         stage.sizeToScene();
     }
 
-    public void createHostView () {
-        LobbyView lobbyView = new LobbyView(true);
+    public void createHostView (AppController appController) {
+        LobbyView lobbyView = new LobbyView(appController,true);
         Scene lobbyScene = new Scene(lobbyView);
         stage.setScene(lobbyScene);
         stage.setTitle("RoboRally");
@@ -103,8 +103,8 @@ public class RoboRally extends Application {
         stage.show();
     }
 
-    public void createClientView () {
-        LobbyView lobbyView = new LobbyView(false);
+    public void createClientView (AppController appController) {
+        LobbyView lobbyView = new LobbyView(appController,false);
         Scene lobbyScene = new Scene(lobbyView);
         stage.setScene(lobbyScene);
         stage.setTitle("RoboRally");

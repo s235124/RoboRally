@@ -12,7 +12,6 @@ public class ServerPlayer {
     Lobby currentLobby;
 
     public ServerPlayer(String playerName, String cardStr, String color, Lobby currentLobby) {
-        this.id = 0;
         this.playerName = playerName;
         this.cardStr = cardStr;
         this.color = color;
