@@ -9,13 +9,14 @@ public class ServerPlayer {
 
     String color;
 
-    int currentLobby;
+    Lobby currentLobby;
 
-    public ServerPlayer(String playerName, String cardStr, String color, int currentLobby) {
+    public ServerPlayer(String playerName, String cardStr, String color, Lobby currentLobby) {
+        this.id = 0;
         this.playerName = playerName;
         this.cardStr = cardStr;
         this.color = color;
-        this.currentLobby = currentLobby;
+       this.currentLobby = currentLobby;
     }
 
     public Integer getId() {
@@ -50,11 +51,11 @@ public class ServerPlayer {
         this.color = color;
     }
 
-    public int getCurrentLobby() {
+    public Lobby getCurrentLobby() {
         return currentLobby;
     }
 
-    public void setCurrentLobby(int currentLobby) {
+    public void setCurrentLobby(Lobby currentLobby) {
         this.currentLobby = currentLobby;
     }
 }

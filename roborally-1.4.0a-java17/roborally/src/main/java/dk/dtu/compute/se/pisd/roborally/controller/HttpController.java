@@ -1,14 +1,5 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.Adapter;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Lobby;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
-
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,6 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Lobby;
+import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
 
 public class HttpController {
 
@@ -65,7 +64,7 @@ public class HttpController {
         return lobbies;
     }
 
-    public static Lobby getLobbyById(Integer lobbyId) throws Exception {
+    public static Lobby getLobbyById(int lobbyId) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create("http://localhost:8080/lobbies/" + lobbyId))
@@ -86,7 +85,19 @@ public class HttpController {
     }
 
     public static boolean addPlayerToLobby (int lobbyID, Player player) throws Exception {
-        ServerPlayer sPlayer = new ServerPlayer(player.getName(), player.cardStr, player.getColor(), lobbyID);
+        
+
+        Lobby newLobby = getLobbyById(lobbyID);
+
+        if (newLobby.getPlayers() == null) {
+                newLobby.setPlayers(new ArrayList<>());
+             }
+     
+        if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
+                return false;
+
+        
+            ServerPlayer sPlayer = new ServerPlayer(player.getName(), player.cardStr, player.getColor(),newLobby);
         Gson gson = new Gson();
         String json = gson.toJson(sPlayer);
 
@@ -104,30 +115,25 @@ public class HttpController {
 
         System.out.println(getResult);
 
-//        Gson gson = new GsonBuilder().registerTypeAdapter(Lobby.class, new Adapter<Lobby>()).create();
-//        Lobby newLobby = gson.fromJson(getResult, Lobby.class);
-//
-//        if (newLobby.getPlayers() == null) {
-//            newLobby.setPlayers(new ArrayList<>());
-//        }
-//
-//        if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
-//            return false;
-//
-//        newLobby.addPlayer(player);
-//
-//        String json = gson.toJson(newLobby);
-//
-//        HttpRequest putRequest = HttpRequest.newBuilder()
-//                .PUT(HttpRequest.BodyPublishers.ofString(json))
-//                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID))
-//                .setHeader("User-Agent", "Product Client")
-//                .header("Content-Type", "application/json")
-//                .build();
-//        CompletableFuture<HttpResponse<String>> putResponse =
-//                httpClient.sendAsync(putRequest, HttpResponse.BodyHandlers.ofString());
-//        String putResult = putResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
-//        System.out.println(putResult);
+
+        if (newLobby.getPlayers().size() >= newLobby.getMaxPlayerCount())
+            return false;
+
+        newLobby.addPlayer(sPlayer);
+
+        String json1 = gson.toJson(newLobby);
+
+        HttpRequest putRequest = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(json1))
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID))
+                .setHeader("User-Agent", "Product Client")
+                .header("Content-Type", "application/json")
+                .build();
+        CompletableFuture<HttpResponse<String>> putResponse =
+                httpClient.sendAsync(putRequest, HttpResponse.BodyHandlers.ofString());
+        String putResult = putResponse.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
+        System.out.println(putResult);
+        System.out.println(json1);
         return true;
     }
 

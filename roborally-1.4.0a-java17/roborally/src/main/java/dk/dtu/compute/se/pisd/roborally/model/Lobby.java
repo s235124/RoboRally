@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby {
-    Integer lobbyID;
+    int lobbyID;
 
     int maxPlayerCount;
     int currentPlayerCount;
@@ -15,10 +15,9 @@ public class Lobby {
 
     boolean ready;
 
-    List<Player> players;
+    List<ServerPlayer> players;
 
     public Lobby (int maxPlayerCount, int map, boolean visibility, boolean ready) {
-        this.lobbyID = null;
         this.maxPlayerCount = maxPlayerCount;
         this.currentPlayerCount = 0;
         this.map = map;
@@ -75,15 +74,15 @@ public class Lobby {
         this.ready = ready;
     }
 
-    public List<Player> getPlayers() {
+    public List<ServerPlayer> getPlayers() {
         return players;
     }
 
-    public void addPlayer (Player player) {
+    public void addPlayer (ServerPlayer player) {
         players.add(player);
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<ServerPlayer> players) {
         this.players = players;
     }
 }
