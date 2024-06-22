@@ -231,24 +231,20 @@ public class HttpController {
 
     public static boolean sendCardStrByColor (int lobbyID, String color, String cardStr) throws Exception {
         Lobby lobby = getLobbyById(lobbyID);
-        Gson gson = new Gson();
-        Gson lobbyGson = new GsonBuilder().registerTypeAdapter(ServerPlayer.class, new ServerPlayerSerializer()).create();
-        String json = "";
+        Gson gson = new GsonBuilder().registerTypeAdapter(ServerPlayer.class, new ServerPlayerSerializer()).create();
         int id = 0;
 
         for (int i = 0; i < lobby.getPlayers().size(); i++) {
             if (lobby.getPlayers().get(i).getColor().equals(color)) {
                 System.out.println(lobby.getPlayers().get(i).getColor() + i);
-                lobby.getPlayers().get(i).setCurrentLobby(lobby);
                 lobby.getPlayers().get(i).setCardStr(cardStr);
                 id = lobby.getPlayers().get(i).getId();
-                json = gson.toJson(lobby.getPlayers().get(i));
             }
         }
 
         HttpRequest playerRequest = HttpRequest.newBuilder()
-                .PUT(HttpRequest.BodyPublishers.ofString(json))
-                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/players/" + id))
+                .PUT(HttpRequest.BodyPublishers.ofString(cardStr))
+                .uri(URI.create("http://localhost:8080/lobbies/" + lobbyID + "/players/" + id + "/cardstr"))
                 .setHeader("User-Agent", "Product Client")
                 .header("Content-Type", "application/json")
                 .build();
@@ -258,7 +254,7 @@ public class HttpController {
 
         System.out.println(playerResult);
 
-        String lobbyJson = lobbyGson.toJson(lobby);
+        String lobbyJson = gson.toJson(lobby);
 
         HttpRequest lobbyRequest = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(lobbyJson))
@@ -272,6 +268,18 @@ public class HttpController {
 
         System.out.println(lobbyResult);
         return lobbyResult.equals("lobby successfully updated");
+    }
+
+    public static String receiveCardsByColor (int lobbyID, String color) throws Exception {
+        Lobby lobby = getLobbyById(lobbyID);
+
+        for (int i = 0; i < lobby.getPlayers().size(); i++) {
+            if (lobby.getPlayers().get(i).getColor().equals(color)) {
+                return lobby.getPlayers().get(i).getCardStr();
+            }
+        }
+
+        return null;
     }
 
     public static List<String> getPlayerIdFromLobby (int lobbyID) throws Exception {

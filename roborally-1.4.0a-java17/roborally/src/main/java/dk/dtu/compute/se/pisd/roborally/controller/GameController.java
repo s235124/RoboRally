@@ -276,6 +276,18 @@ public class GameController {
             e.printStackTrace();
         }
 
+        ReceiveCardsThread th = new ReceiveCardsThread(this, AppController.currentLobbyID);
+        th.run();
+
+        board.setPlayersCards();
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        board.resetMyCards();
         board.setPhase(Phase.ACTIVATION);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);

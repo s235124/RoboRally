@@ -26,6 +26,8 @@ import static dk.dtu.compute.se.pisd.roborally.model.Phase.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.controller.HttpController;
 import org.jetbrains.annotations.NotNull;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
@@ -180,6 +182,28 @@ public class Board extends Subject {
                 return players.get(i);
         }
         return null;
+    }
+
+    public void setPlayersCards () {
+        try {
+            List<ServerPlayer> splayers = HttpController.getPlayersFromLobbyID(AppController.currentLobbyID);
+            for (int i = 0; i < splayers.size(); i++) {
+                players.get(i).cardStr = splayers.get(i).getCardStr();
+                players.get(i).strToCards();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetMyCards () {
+        try {
+            HttpController.sendCardStrByColor(AppController.currentLobbyID, myColor, "10");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Integer getGameId() {

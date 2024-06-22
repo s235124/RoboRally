@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.HttpController;
-import dk.dtu.compute.se.pisd.roborally.controller.ThreadController;
+import dk.dtu.compute.se.pisd.roborally.controller.ReadyThread;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
 import javafx.geometry.Pos;
@@ -76,8 +76,8 @@ public class LobbyView extends VBox implements ViewObserver {
         }
         else {
             waiting = new Label("Waiting for host...");
-            ThreadController threadController = new ThreadController(this.appController, this.appController.currentLobbyID);
-            Thread thread = new Thread(threadController);
+            ReadyThread readyThread = new ReadyThread(this.appController, this.appController.currentLobbyID);
+            Thread thread = new Thread(readyThread);
             thread.start();
         }
         vbox = new VBox();

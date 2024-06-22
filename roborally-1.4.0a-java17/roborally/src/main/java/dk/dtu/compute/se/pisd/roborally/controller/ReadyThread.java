@@ -8,7 +8,7 @@ import javafx.application.Platform;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ThreadController implements Runnable {
+public class ReadyThread implements Runnable {
 
     private volatile boolean flag = true;
 
@@ -16,7 +16,7 @@ public class ThreadController implements Runnable {
 
     AppController appController;
 
-    public ThreadController(AppController appController, int id) {
+    public ReadyThread(AppController appController, int id) {
         this.appController = appController;
         this.id = id;
     }

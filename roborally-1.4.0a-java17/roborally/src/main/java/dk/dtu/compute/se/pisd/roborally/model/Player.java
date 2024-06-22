@@ -106,6 +106,17 @@ public class Player extends Subject {
         }
     }
 
+    public void strToCards () {
+        String[] cardsAsString = this.cardStr.split(",");
+        for (int i = 0; i < cardsAsString.length; i++) {
+            int card = Integer.parseInt(cardsAsString[i]);
+            if (card == 8)
+                continue;
+            Command c = Command.values()[card];
+            program[i].setCard(new CommandCard(c));
+        }
+    }
+
     public String getColor() {
         return color;
     }
