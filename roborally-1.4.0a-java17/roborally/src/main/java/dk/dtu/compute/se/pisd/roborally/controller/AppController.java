@@ -57,7 +57,7 @@ public class AppController implements Observer {
 
     final private RoboRally roboRally;
 
-    public int currentLobbyID;
+    public static int currentLobbyID;
 
     public GameController gameController;
 
@@ -116,10 +116,11 @@ public class AppController implements Observer {
             gameController.board.maxPlayers = result.get();
         }
 
-        chooseColor(gameController.board);
+        gameController.board.myColor = chooseColor(gameController.board);
 
         try {
-            HttpController.addLobbyToServer(gameController.board);
+            if (!HttpController.addLobbyToServer(gameController.board))
+                return;
             this.currentLobbyID = HttpController.getLobbyCount();
         }
         catch (Exception e) {
@@ -182,7 +183,7 @@ public class AppController implements Observer {
         roboRally.createBoardView(this.gameController);
     }
 
-    public void chooseColor (Board board) {
+    public String chooseColor (Board board) {
         List<String> selectedColors = new ArrayList<>();
 
         //v
@@ -212,10 +213,11 @@ public class AppController implements Observer {
             alert.setHeaderText(null);
             alert.setContentText("No color was selected for Player " + (board.getPlayersNumber() + 1) + ". Exiting...");
             alert.showAndWait();
-            return;
+            return null;
         }
         System.out.println(player.getColor());
         board.addPlayer(player);
+        return player.getColor();
     }
 
     public void choosePlayerAndColors (Board board) {
@@ -334,9 +336,8 @@ public class AppController implements Observer {
         roboRally.createBoardView(this.gameController);
     }
 
-    public void createBoardView (GameController gameController) {
-
-        roboRally.createBoardView(gameController);
+    public void createBoardView () {
+        roboRally.createBoardView(this.gameController);
     }
 
     public void createHostView () {
@@ -370,6 +371,16 @@ public class AppController implements Observer {
                 return "ExampleBoard";
         }
         return null;
+    }
+
+    public int mapBoardToCode (String mapName) {
+        switch (mapName) {
+            case "defaultboard":
+                return 0;
+            case "ExampleBoard":
+                return 1;
+        }
+        return 0;
     }
 
     /**

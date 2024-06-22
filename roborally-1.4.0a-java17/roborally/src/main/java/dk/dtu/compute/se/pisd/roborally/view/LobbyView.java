@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 
 public class LobbyView extends VBox implements ViewObserver {
     boolean isHost;
+    boolean isStarted;
 
     AppController appController;
 
@@ -31,6 +32,7 @@ public class LobbyView extends VBox implements ViewObserver {
     public LobbyView(AppController appController, boolean isHost) {
         this.isHost = isHost;
         this.appController = appController;
+        this.isStarted = false;
         playerID = new ArrayList<>();
 
         playerID.add("blue");
@@ -47,7 +49,6 @@ public class LobbyView extends VBox implements ViewObserver {
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                // Send signal to server for the other players
 
                 // Fetch other players in the lobby
                 List<ServerPlayer> players;
@@ -70,11 +71,14 @@ public class LobbyView extends VBox implements ViewObserver {
                 });
 
                 this.appController.gameController.startProgrammingPhase();
-                this.appController.createBoardView(this.appController.gameController);
+                this.appController.createBoardView();
             });
         }
         else {
             waiting = new Label("Waiting for host...");
+            ThreadController threadController = new ThreadController(this.appController, this.appController.currentLobbyID);
+            Thread thread = new Thread(threadController);
+            thread.start();
         }
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);
@@ -87,12 +91,6 @@ public class LobbyView extends VBox implements ViewObserver {
 
         vbox.getChildren().add(isHost ? ready : waiting);
         this.getChildren().add(vbox);
-
-        if (!isHost) {
-            ThreadController threadController = new ThreadController(this.appController.currentLobbyID);
-            Thread thread = new Thread(threadController);
-            thread.start();
-        }
     }
 
     @Override

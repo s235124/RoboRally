@@ -11,6 +11,8 @@ public class ServerPlayer {
 
     Lobby currentLobby;
 
+    public ServerPlayer () {}
+
     public ServerPlayer(String playerName, String cardStr, String color, Lobby currentLobby) {
         this.playerName = playerName;
         this.cardStr = cardStr;

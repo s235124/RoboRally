@@ -96,6 +96,16 @@ public class Player extends Subject {
         }
     }
 
+    public void setCardStr () {
+        this.cardStr = "";
+        for (int i = 0; i < this.program.length; i++) {
+            if (program[i].getCard() != null)
+                this.cardStr += this.program[i].getCard().command.ordinal() + (i == this.program.length - 1 ? "" : ",");
+            else
+                this.cardStr += "8" + (i == this.program.length - 1 ? "" : ",");
+        }
+    }
+
     public String getColor() {
         return color;
     }

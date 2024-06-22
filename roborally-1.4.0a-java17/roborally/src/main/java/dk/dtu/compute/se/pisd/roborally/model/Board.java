@@ -47,6 +47,8 @@ public class Board extends Subject {
 
     private Integer gameId;
 
+    public String myColor;
+
     public int maxPlayers;
 
     public int map;
@@ -168,6 +170,16 @@ public class Board extends Subject {
 
     public void clearPlayers () {
         this.players.clear();
+    }
+
+    public Player findPlayerByColor (String color) {
+        System.out.println(color + "; " + myColor);
+        for (int i = 0; i < players.size(); i++) {
+            System.out.println(players.get(i).getColor());
+            if (players.get(i).getColor().equals(color))
+                return players.get(i);
+        }
+        return null;
     }
 
     public Integer getGameId() {

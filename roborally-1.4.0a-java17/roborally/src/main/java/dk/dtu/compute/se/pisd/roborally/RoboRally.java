@@ -88,6 +88,9 @@ public class RoboRally extends Application {
         if (gameController != null) {
             // create and add view for new board
             BoardView boardView = new BoardView(gameController);
+            VBox vbox = new VBox(boardView, boardRoot);
+            Scene primaryScene = new Scene(vbox);
+            stage.setScene(primaryScene);
             boardRoot.setCenter(boardView);
         }
 

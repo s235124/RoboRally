@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
@@ -264,6 +265,17 @@ public class GameController {
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
+
+        Player player = board.findPlayerByColor(board.myColor);
+        player.setCardStr();
+        try {
+            if (!HttpController.sendCardStrByColor(AppController.currentLobbyID, player.getColor(), player.cardStr))
+                System.out.println("DNF");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         board.setPhase(Phase.ACTIVATION);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
