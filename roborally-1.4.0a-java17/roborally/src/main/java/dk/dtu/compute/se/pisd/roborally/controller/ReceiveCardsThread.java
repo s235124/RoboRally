@@ -30,7 +30,7 @@ public class ReceiveCardsThread implements Runnable {
             }
 
             try { // I sleep
-                Thread.sleep(100);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 // Handle the interruption appropriately

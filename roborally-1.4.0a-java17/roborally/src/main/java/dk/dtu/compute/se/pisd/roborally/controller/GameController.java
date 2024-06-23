@@ -48,16 +48,18 @@ public class GameController {
 
     final public Board board;
 
+    public boolean isOnline;
+
     public GameController(Board board) {
         this.board = board;
     }
-
 
     //For new game
     public GameController(Board board, boolean e) {
         this.board = board;
         initializeGame();
     }
+
     /**
      *
      * @author Melih Kelkitli, s235114
@@ -263,29 +265,56 @@ public class GameController {
     }
 
     public void finishProgrammingPhase() {
+        if (isOnline) {
+            Player player = board.findPlayerByColor(board.myColor);
+
+            for (int i = 0; i < player.getProgramFields().length; i++) {
+                if (player.getProgramField(i).getCard() != null) {
+                    if (player.getProgramField(i).getCard().command.ordinal() == 5) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Choose Direction");
+                        alert.setHeaderText("Choose which way to turn");
+                        alert.setContentText("Choose your option.");
+
+                        ButtonType buttonLeft = new ButtonType("Turn Left");
+                        ButtonType buttonRight = new ButtonType("Turn Right");
+
+                        alert.getButtonTypes().setAll(buttonLeft, buttonRight);
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.isPresent() && result.get() == buttonLeft) {
+                            player.getProgramField(i).setCard(new CommandCard(Command.LEFT));
+                        } else if (result.isPresent() && result.get() == buttonRight) {
+                            player.getProgramField(i).setCard(new CommandCard(Command.RIGHT));
+                        }
+                    }
+                }
+            }
+
+            player.setCardStr();
+
+            try {
+                if (!HttpController.sendCardStrByColor(AppController.currentLobbyID, player.getColor(), player.cardStr))
+                    System.out.println("DNF");
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ReceiveCardsThread th = new ReceiveCardsThread(this, AppController.currentLobbyID);
+            th.run();
+
+            board.setPlayersCards();
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
-
-        Player player = board.findPlayerByColor(board.myColor);
-        player.setCardStr();
-        try {
-            if (!HttpController.sendCardStrByColor(AppController.currentLobbyID, player.getColor(), player.cardStr))
-                System.out.println("DNF");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ReceiveCardsThread th = new ReceiveCardsThread(this, AppController.currentLobbyID);
-        th.run();
-
-        board.setPlayersCards();
-
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
         board.resetMyCards();
         board.setPhase(Phase.ACTIVATION);

@@ -128,6 +128,17 @@ public class HttpController {
 
         newLobby.addPlayer(sPlayer);
 
+        String[] colors = newLobby.getPlayerColors().split(",");
+        String retColor = "";
+
+        for (int i = 0; i < colors.length; i++) {
+            if (!colors[i].equals(player.getColor())) {
+                retColor += colors[i] + (i == colors.length - 1 ? "" : ",");
+            }
+        }
+
+        newLobby.setPlayerColors(retColor);
+
         String json1 = lobbyGson.toJson(newLobby);
 
         HttpRequest putRequest = HttpRequest.newBuilder()

@@ -13,9 +13,12 @@ public class Lobby {
 
     boolean visibility;
 
+
     boolean ready;
 
     List<ServerPlayer> players;
+
+    String playerColors;
 
     public Lobby (int maxPlayerCount, int map, boolean visibility, boolean ready) {
         this.maxPlayerCount = maxPlayerCount;
@@ -24,6 +27,15 @@ public class Lobby {
         this.visibility = visibility;
         this.ready = ready;
         players = new ArrayList<>();
+        this.playerColors = "red,green,blue,orange,grey,magenta";
+    }
+
+    public String getPlayerColors() {
+        return playerColors;
+    }
+
+    public void setPlayerColors(String playerColors) {
+        this.playerColors = playerColors;
     }
 
     public Integer getLobbyID() {

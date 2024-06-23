@@ -22,7 +22,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,12 +75,12 @@ public class AppController implements Observer {
         //     here we just create an empty board with the required number of players.
         Board board = new Board(8,8);
 
-
         choosePlayerAndColors(board);
 
         // Since this is a new game, the board will be loaded with default checkpoints, walls and holes
         // by using this constructor (which is different from the constructor with only the board as arg).
         gameController = new GameController(board, false);
+        gameController.isOnline = false;
 
         // XXX: V2
         // board.setCurrentPlayer(board.getPlayer(0));
@@ -101,11 +100,13 @@ public class AppController implements Observer {
 
         if (boardName != null)
             this.gameController = new GameController(LoadBoard.loadBoard(boardName));
+        this.gameController.isOnline = true;
         this.currentLobbyID = lobby.getLobbyID();
     }
 
     public void loadBoardHost () {
         loadBoard();
+        this.gameController.isOnline = true;
 
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
@@ -184,10 +185,27 @@ public class AppController implements Observer {
     }
 
     public String chooseColor (Board board) {
+        String[] colorString;
+        List<String> remainingColors;
+        try {
+            Lobby lobby = HttpController.getLobbyById(AppController.currentLobbyID);
+            if (lobby != null) {
+                colorString = lobby.getPlayerColors().split(",");
+                remainingColors = Arrays.asList(colorString);
+            }
+            else {
+                remainingColors = new ArrayList<>(PLAYER_COLORS);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
         List<String> selectedColors = new ArrayList<>();
 
         //v
-        List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
+//        List<String> remainingColors = new ArrayList<>(PLAYER_COLORS);
         remainingColors.removeAll(selectedColors);
         Player player = new Player(board, PLAYER_COLORS.get(0), "Player " + (board.getPlayersNumber() + 1));
         ChoiceDialog<String> dialog = new ChoiceDialog<>(remainingColors.get(0), remainingColors);

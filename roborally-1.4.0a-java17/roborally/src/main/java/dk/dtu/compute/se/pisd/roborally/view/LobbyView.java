@@ -8,6 +8,7 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.HttpController;
 import dk.dtu.compute.se.pisd.roborally.controller.ReadyThread;
+import dk.dtu.compute.se.pisd.roborally.model.Lobby;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.ServerPlayer;
 import javafx.geometry.Pos;
@@ -25,9 +26,12 @@ public class LobbyView extends VBox implements ViewObserver {
 
     Button ready;
 
+    Button refresh;
+
     Label waiting;
 
     VBox vbox;
+    VBox playersVbox;
 
     public LobbyView(AppController appController, boolean isHost) {
         this.isHost = isHost;
@@ -35,9 +39,14 @@ public class LobbyView extends VBox implements ViewObserver {
         this.isStarted = false;
         playerID = new ArrayList<>();
 
-        playerID.add("blue");
-        playerID.add("red");
-        playerID.add("green");
+        playersVbox = new VBox();
+        playersVbox.setAlignment(Pos.TOP_CENTER);
+        playersVbox.setSpacing(10);
+
+        refresh = new Button("Refresh");
+        refresh.setOnAction(e -> {
+            refresh();
+        });
 
         if (isHost) {
             ready = new Button("Ready");
@@ -80,17 +89,42 @@ public class LobbyView extends VBox implements ViewObserver {
             Thread thread = new Thread(readyThread);
             thread.start();
         }
+
         vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);
         vbox.setSpacing(10);
 
 
+        refresh();
+
+        vbox.getChildren().add(refresh);
+        vbox.getChildren().add(isHost ? ready : waiting);
+        this.getChildren().addAll(playersVbox, vbox);
+    }
+
+    public void refresh () {
+        playersVbox.getChildren().clear();
+        playerID.clear();
+
+        try {
+            Lobby lobby = HttpController.getLobbyById(AppController.currentLobbyID);
+            for (int i = 0; i < lobby.getPlayers().size(); i++) {
+                playerID.add(lobby.getPlayers().get(i).getColor());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        refresh = new Button("Refresh");
+        refresh.setOnAction(e -> {
+            refresh();
+        });
+
         for (String ID : playerID) {
-            vbox.getChildren().add(new Label(ID));
+            playersVbox.getChildren().add(new Label(ID));
         }
 
-        vbox.getChildren().add(isHost ? ready : waiting);
-        this.getChildren().add(vbox);
+        appController.increaseStageSize();
     }
 
     @Override

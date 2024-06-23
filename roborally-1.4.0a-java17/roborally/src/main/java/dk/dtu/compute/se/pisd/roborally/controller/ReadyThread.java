@@ -27,7 +27,7 @@ public class ReadyThread implements Runnable {
             // Polling
             boolean result = pollServer();
 
-            System.out.println(result);
+//            System.out.println(result);
 
             if (result) {
                 startGame();
@@ -35,7 +35,7 @@ public class ReadyThread implements Runnable {
             }
 
             try { // I sleep
-                Thread.sleep(100);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 // Handle the interruption appropriately
