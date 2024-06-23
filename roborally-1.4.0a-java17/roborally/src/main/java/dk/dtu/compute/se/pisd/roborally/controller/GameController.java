@@ -350,6 +350,8 @@ public class GameController {
                     if (currentPlayer.points >= board.checkpointSpaces.size()) {
                         System.out.println(currentPlayer.getName() + " has won");
 
+
+
                     }
                 }
                 for (int j = 0; j < board.holes.size(); j++) {

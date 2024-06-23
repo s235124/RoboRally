@@ -36,6 +36,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /**
  * ...
@@ -69,6 +70,7 @@ public class RoboRally extends Application {
         VBox vbox = new VBox(startView, boardRoot);
         vbox.setMinWidth(MIN_APP_WIDTH);
         Scene primaryScene = new Scene(vbox);
+        primaryScene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
         stage.setScene(primaryScene);
         stage.setTitle("RoboRally");

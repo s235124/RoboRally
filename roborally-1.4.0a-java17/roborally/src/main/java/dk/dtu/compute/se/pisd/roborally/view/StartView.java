@@ -27,18 +27,21 @@ public class StartView extends HBox implements ViewObserver {
         this.appController = appController;
 
         host = new Button("Host a game");
-        host.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
+        host.setStyle("-fx-font-weight: bold");
+        host.getStyleClass().setAll("btn","btn-primary","btn-lg");
         host.setOnAction(e -> {
             appController.loadBoardHost();
             appController.createHostView();
         });
         host.setMinSize(150,100);
         join = new Button("Join a game");
-        join.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
+        join.setStyle("-fx-font-weight: bold");
+        join.getStyleClass().setAll("btn","btn-info","btn-lg");
         join.setMinSize(150,100);
         join.setOnAction(e -> appController.createJoinView());
         local = new Button("Play locally");
-        local.setStyle("-fx-background-color: #3C7F55; -fx-text-fill: white; ");
+        local.setStyle("-fx-font-weight: bold");
+        local.getStyleClass().setAll("btn","btn-success","btn-lg");
         local.setMinSize(150,100);
         local.setOnAction(e -> appController.createMenuBarView());
 

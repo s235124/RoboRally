@@ -9,8 +9,13 @@ import dk.dtu.compute.se.pisd.roborally.controller.HttpController;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Lobby;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.layout.VBox;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 public class JoinView extends VBox implements ViewObserver {
 
@@ -48,26 +53,54 @@ public class JoinView extends VBox implements ViewObserver {
         for (int i = 0; i < list.size(); i++) {
             places.add(new Button(list.get(i).getLobbyID() + ", " + list.get(i).getCurrentPlayerCount() + "/" + list.get(i).getMaxPlayerCount()));
 
+            places.get(i).setStyle("-fx-background-color: navy; -fx-text-fill: white; -fx-font-weight: bold;");
+
             int finalI = i;
 
             places.get(i).setOnAction(e -> {
-                appcontroller.loadBoardClient(list.get(finalI));
-                Board gameBoard = appcontroller.gameController.board;
+                if (list.get(finalI).getCurrentPlayerCount() == list.get(finalI).getMaxPlayerCount()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Cannot join server");
+                    alert.setHeaderText("Too many players");
+                    alert.setContentText("There are too many players in this server, cannot join");
 
-                appcontroller.gameController.board.myColor = appcontroller.chooseColor(gameBoard);
+                    DialogPane dialogPane = alert.getDialogPane();
+                    dialogPane.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+                    dialogPane.getStyleClass().addAll("alert", "alert-danger");
 
-                try {
-                    if (!HttpController.addPlayerToLobby(list.get(finalI).getLobbyID(), gameBoard.getPlayer(gameBoard.getPlayersNumber() - 1)))
-                        return;
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
+                    ButtonType okButtonType = alert.getButtonTypes().stream()
+                            .filter(buttonType -> buttonType.getText().equals("OK"))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (okButtonType != null) { // Get styled
+                        Node okButton = alert.getDialogPane().lookupButton(okButtonType);
+                        okButton.getStyleClass().addAll("btn", "btn-danger");
+                        okButton.setStyle("-fx-text-fill: black;");
+                    }
+
+                    alert.showAndWait();
                 }
+                else {
+                    appcontroller.loadBoardClient(list.get(finalI));
+                    Board gameBoard = appcontroller.gameController.board;
 
-                appcontroller.createLobbyView(list.get(finalI).getLobbyID());
+                    appcontroller.gameController.board.myColor = appcontroller.chooseColor(gameBoard);
+
+                    try {
+                        if (!HttpController.addPlayerToLobby(list.get(finalI).getLobbyID(), gameBoard.getPlayer(gameBoard.getPlayersNumber() - 1)))
+                            return;
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                    appcontroller.createLobbyView(list.get(finalI).getLobbyID());
+                }
             });
         }
 
-        refresh = new Button("refresh");
+        refresh = new Button("Refresh");
+        refresh.setStyle("-fx-background-color: navy; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; ");
         refresh.setOnAction(e -> {
             refresh();
         });

@@ -46,7 +46,12 @@ public class HttpController {
         CompletableFuture<HttpResponse<String>> response =
                 httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
 
-        addPlayerToLobby(getLobbyCount() + 1, player);
+        int c = getLobbyCount();
+        if (c == 1)
+            addPlayerToLobby(getLobbyCount(), player);
+        else
+            addPlayerToLobby(getLobbyCount() + 1, player);
+
 
         String result = response.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
 
