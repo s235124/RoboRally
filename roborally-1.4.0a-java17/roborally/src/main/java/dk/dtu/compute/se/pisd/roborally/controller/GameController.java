@@ -311,12 +311,13 @@ public class GameController {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            
+            board.resetMyCards();
         }
 
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
 
-        board.resetMyCards();
         board.setPhase(Phase.ACTIVATION);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);

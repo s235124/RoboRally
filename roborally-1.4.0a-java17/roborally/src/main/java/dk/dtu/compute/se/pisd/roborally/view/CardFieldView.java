@@ -36,6 +36,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /**
  * ...
@@ -54,7 +55,7 @@ public class CardFieldView extends GridPane implements ViewObserver {
 
     final public static Border BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
 
-    final public static Background BG_DEFAULT = new Background(new BackgroundFill(Color.WHITE, null, null));
+    final public static Background BG_DEFAULT = new Background(new BackgroundFill(Color.AQUA, null, null));
     final public static Background BG_DRAG = new Background(new BackgroundFill(Color.GRAY, null, null));
     final public static Background BG_DROP = new Background(new BackgroundFill(Color.LIGHTGRAY, null, null));
 
@@ -85,6 +86,7 @@ public class CardFieldView extends GridPane implements ViewObserver {
         this.setMaxHeight(CARDFIELD_HEIGHT);
 
         label = new Label("This is a slightly longer text");
+        label.setStyle("-fx-font-weight: bold;");
         label.setWrapText(true);
         label.setMouseTransparent(true);
         this.add(label, 0, 0);

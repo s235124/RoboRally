@@ -31,6 +31,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /**
  * ...
@@ -91,15 +92,19 @@ public class PlayerView extends Tab implements ViewObserver {
         //      refactored.
 
         finishButton = new Button("Finish Programming");
+        finishButton.getStyleClass().addAll("btn", "btn-primary");
         finishButton.setOnAction( e -> gameController.finishProgrammingPhase());
 
         executeButton = new Button("Execute Program");
+        executeButton.getStyleClass().addAll("btn", "btn-success");
         executeButton.setOnAction( e-> gameController.executePrograms());
 
         stepButton = new Button("Execute Current Register");
+        stepButton.getStyleClass().addAll("btn", "btn-warning");
         stepButton.setOnAction( e-> gameController.executeStep());
 
         buttonPanel = new VBox(finishButton, executeButton, stepButton);
+        buttonPanel.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         buttonPanel.setAlignment(Pos.CENTER_LEFT);
         buttonPanel.setSpacing(3.0);
         // programPane.add(buttonPanel, Player.NO_REGISTERS, 0); done in update now
