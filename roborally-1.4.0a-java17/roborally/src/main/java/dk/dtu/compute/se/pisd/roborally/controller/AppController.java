@@ -125,7 +125,7 @@ public class AppController implements Observer {
             this.currentLobbyID = HttpController.getLobbyCount();
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);

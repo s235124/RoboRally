@@ -43,7 +43,8 @@ public class ReceiveCardsThread implements Runnable {
             List<ServerPlayer> players = HttpController.getPlayersFromLobbyID(id);
             for (int i = 0; i < players.size(); i++) {
                 ServerPlayer player = players.get(i);
-                if (HttpController.receiveCardsByColor(id, player.getColor()).equals("") || HttpController.receiveCardsByColor(id, player.getColor()).equals("10")) {
+                if (HttpController.receiveCardsByColor(id, player.getColor()).equals("") ||
+                        HttpController.receiveCardsByColor(id, player.getColor()).equals("10")) {
                     System.out.println("Empty");
                     return false;
                 }

@@ -46,17 +46,14 @@ public class HttpController {
         CompletableFuture<HttpResponse<String>> response =
                 httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
 
-        int c = getLobbyCount();
-        if (c == 1)
-            addPlayerToLobby(getLobbyCount(), player);
-        else
-            addPlayerToLobby(getLobbyCount() + 1, player);
-
-
         String result = response.thenApply((r)->r.body()).get(5, TimeUnit.SECONDS);
 
-        if (result.equals("lobby created")) return true;
-        else return false;
+        if (!result.equals("lobby created")) return false;
+
+        int c = getLobbyCount();
+
+        if (!addPlayerToLobby(c, player)) return false;
+        return true;
     }
 
     public static List<Lobby> getLobbies() throws Exception {
